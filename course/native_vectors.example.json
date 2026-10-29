@@ -1,0 +1,4 @@
+{
+  "qwen05": "runs/workbench_vectors/qwen05_happiness.npz",
+  "qwen15": "runs/workbench_vectors/qwen15_happiness.npz"
+}

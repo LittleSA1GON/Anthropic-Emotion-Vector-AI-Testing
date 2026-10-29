@@ -1,0 +1,89 @@
+{
+  "schema": "mm-emotion.validation.v1",
+  "cpu_tests": {
+    "passed": 32,
+    "failed": 0,
+    "command": "python -m pytest -q",
+    "mocked_or_tensor_tests_not_model_evidence": true
+  },
+  "notebook": {
+    "schema_valid": true,
+    "all_code_cells_compile": true,
+    "reconstructed_source_tests_passed": 32
+  },
+  "streamlit": {
+    "home_exceptions": 0,
+    "multi_model_exceptions": 0,
+    "report_builder_exceptions": 0
+  },
+  "classifications": {
+    "cases": 18,
+    "unique_classifications": 18,
+    "full_matrix": true
+  },
+  "runtime": {
+    "timestamp_utc": "2026-10-29T21:30:40.569481+00:00",
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "git_commit": "unknown",
+    "torch": "2.14.1+cpu",
+    "torch_cuda": null,
+    "gpu_names": [],
+    "gpu_cc": []
+  },
+  "local_hardware": "Intel Iris Xe; no CUDA GPU",
+  "real_gpu_evidence": {
+    "acceptance_status": "completed",
+    "model_checkpoints": 3,
+    "matrix_records": 54,
+    "steering_generations": 18,
+    "threshold_status": "ungraded_provisional_thresholds",
+    "first_run_failure": "Qwen2.5 1.5B FP16 produced nonfinite captures; explicit FP32 rerun passed",
+    "precision_family_followup": "completed",
+    "precision_comparison_direction_cosines": {
+      "joy": 0.7936436469,
+      "calm": 0.7704426799,
+      "anger": 0.7996551578,
+      "anxiety": 0.8061847771
+    }
+  },
+  "thresholds": "proposed_not_approved",
+  "docx_render": "Exact rendering blocked by missing LibreOffice; DOCX structured content verified",
+  "pdf_render": "Final measured portable content-equivalent PDF rendered and visually inspected; exact Word pagination unavailable",
+  "drawio": [
+    {
+      "file": "course/drawio/2.1_Context_Model.drawio",
+      "diagrams": 1
+    },
+    {
+      "file": "course/drawio/2.2_Input_Classification.drawio",
+      "diagrams": 1
+    },
+    {
+      "file": "course/drawio/2.3_Output_Event_Action.drawio",
+      "diagrams": 1
+    },
+    {
+      "file": "course/drawio/2.4_Decision_Table.drawio",
+      "diagrams": 1
+    },
+    {
+      "file": "course/drawio/CMPE187_All_Editable_DrawIO.drawio",
+      "diagrams": 4
+    }
+  ],
+  "kaggle_runs": [
+    {
+      "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab-acceptance",
+      "version": 2,
+      "status": "completed"
+    },
+    {
+      "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab-precision",
+      "version": 1,
+      "status": "completed"
+    }
+  ],
+  "pdf_pages": 12,
+  "final_notebook": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab"
+}

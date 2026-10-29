@@ -1,0 +1,38 @@
+{
+  "backend": "hf",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "emotion": "anger",
+  "layer_0based": 5,
+  "layer_selection_on": "validation",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "note": "Exploratory; synthetic dataset, not validated psychology",
+  "origin": "real_model_inference",
+  "precision": "nf4",
+  "test_evaluation_on": "test",
+  "test_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.03778511347503221,
+      "mean_margin": 0.43575613084120257,
+      "median_margin": 0.43575613084120257,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 11.532481730646202
+    }
+  },
+  "trained_on": "train",
+  "validation_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.03488523362244851,
+      "mean_margin": 0.4374994293568051,
+      "median_margin": 0.4374994293568051,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 12.541106477649498
+    }
+  },
+  "vector_l2_norm": 1.0,
+  "vector_method": "mean_diff",
+  "vector_sha256": "4cba9ef7889feaaeb84f6ef4c1aaa94e7c1ec81cd49e7e2f6b03d085e85c94f6"
+}

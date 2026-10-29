@@ -1,0 +1,86 @@
+[
+  {
+    "pair_id": "train-happiness-0",
+    "emotion": "happiness",
+    "scenario_id": "train-a scheduled project meeting",
+    "neutral_prompt": "Consider a scheduled project meeting. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a scheduled project meeting. A person feels pleased and delighted about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-happiness-1",
+    "emotion": "happiness",
+    "scenario_id": "train-a completed science fair presentation",
+    "neutral_prompt": "Consider a completed science fair presentation. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed science fair presentation. A person feels pleased and delighted about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-happiness-2",
+    "emotion": "happiness",
+    "scenario_id": "train-the return of a library book",
+    "neutral_prompt": "Consider the return of a library book. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider the return of a library book. A person feels pleased and delighted about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-happiness-3",
+    "emotion": "happiness",
+    "scenario_id": "train-a completed team assignment",
+    "neutral_prompt": "Consider a completed team assignment. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed team assignment. A person feels pleased and delighted about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-sadness-0",
+    "emotion": "sadness",
+    "scenario_id": "train-a scheduled project meeting",
+    "neutral_prompt": "Consider a scheduled project meeting. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a scheduled project meeting. A person feels sad and discouraged about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-sadness-1",
+    "emotion": "sadness",
+    "scenario_id": "train-a completed science fair presentation",
+    "neutral_prompt": "Consider a completed science fair presentation. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed science fair presentation. A person feels sad and discouraged about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-sadness-2",
+    "emotion": "sadness",
+    "scenario_id": "train-the return of a library book",
+    "neutral_prompt": "Consider the return of a library book. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider the return of a library book. A person feels sad and discouraged about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-sadness-3",
+    "emotion": "sadness",
+    "scenario_id": "train-a completed team assignment",
+    "neutral_prompt": "Consider a completed team assignment. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed team assignment. A person feels sad and discouraged about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-anger-0",
+    "emotion": "anger",
+    "scenario_id": "train-a scheduled project meeting",
+    "neutral_prompt": "Consider a scheduled project meeting. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a scheduled project meeting. A person feels angry and frustrated about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-anger-1",
+    "emotion": "anger",
+    "scenario_id": "train-a completed science fair presentation",
+    "neutral_prompt": "Consider a completed science fair presentation. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed science fair presentation. A person feels angry and frustrated about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-anger-2",
+    "emotion": "anger",
+    "scenario_id": "train-the return of a library book",
+    "neutral_prompt": "Consider the return of a library book. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider the return of a library book. A person feels angry and frustrated about it. Answer briefly."
+  },
+  {
+    "pair_id": "train-anger-3",
+    "emotion": "anger",
+    "scenario_id": "train-a completed team assignment",
+    "neutral_prompt": "Consider a completed team assignment. A person describes it without a strong emotion. Answer briefly.",
+    "emotion_prompt": "Consider a completed team assignment. A person feels angry and frustrated about it. Answer briefly."
+  }
+]

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-10-29T00:00:00.000Z" agent="Model Mountain CMPE187" version="24.7.0" type="device">
+  <diagram name="2.1 Context Model" id="2.1-context-model">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="context" value="Input context" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="395" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="abstract" value="Abstraction" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="280" y="230" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="diction" value="Diction" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="280" y="580" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="context" target="abstract">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="context" target="diction">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a0" value="Objective" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="135" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ea0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="abstract" target="a0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="Stated" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="240" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ea1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="abstract" target="a1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="Enacted" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="345" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ea2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="abstract" target="a2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d0" value="Standard" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="535" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ed0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="diction" target="d0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="Expressive" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="570" y="640" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ed1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;" edge="1" parent="1" source="diction" target="d1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="contextnote" value="Abstraction: how emotion is expressed. Diction: word-choice style. Source: Deliverable #2A, p.3." style="rounded=0;whiteSpace=wrap;fillColor=#EFF6FF;strokeColor=#93C5FD;fontSize=14;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="855" y="350" width="370" height="105" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

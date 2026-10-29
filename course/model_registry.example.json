@@ -1,0 +1,4 @@
+{
+  "fast_qwen": {"model_id": "Qwen/Qwen2.5-0.5B-Instruct", "precision": "fp16", "max_length": 512},
+  "quantized_qwen": {"model_id": "Qwen/Qwen2.5-3B-Instruct", "precision": "nf4", "max_length": 512}
+}

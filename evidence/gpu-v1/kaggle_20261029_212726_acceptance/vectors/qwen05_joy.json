@@ -1,0 +1,52 @@
+{
+  "backend": "hf",
+  "capture_position": "last_input_token_decoder_block_output",
+  "created_utc": "2026-10-29T21:29:37.365451+00:00",
+  "evaluation": "training_only_not_held_out",
+  "label": "joy",
+  "layer_scores": [
+    {
+      "layer_0based": 5,
+      "layer_position": 0,
+      "margin_std": 0.03513271398875193,
+      "mean_margin": 0.4734626761059655,
+      "median_margin": 0.47960592262386825,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 13.476404819096784
+    },
+    {
+      "layer_0based": 11,
+      "layer_position": 1,
+      "margin_std": 0.05992967939376148,
+      "mean_margin": 1.1081771743291384,
+      "median_margin": 1.0963978683727214,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 18.49129155268761
+    },
+    {
+      "layer_0based": 17,
+      "layer_position": 2,
+      "margin_std": 0.3397038164384536,
+      "mean_margin": 8.18302253702995,
+      "median_margin": 8.10161145148101,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 24.088697686187235
+    }
+  ],
+  "layers_0based": [
+    5,
+    11,
+    17
+  ],
+  "method": "mean_diff",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "n_pairs": 6,
+  "origin": "real_model_inference",
+  "pairs_sha256": "8e6c8458b14d012151768e20372561b011805030385c3677aa04f8febb243673",
+  "precision": "fp16",
+  "schema": "mm-emotion.quick-vector.v1",
+  "vector_sha256": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18"
+}

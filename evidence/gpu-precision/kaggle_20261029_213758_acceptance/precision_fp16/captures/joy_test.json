@@ -1,0 +1,16 @@
+{
+  "backend": "hf",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "emotion": "joy",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "origin": "real_model_inference",
+  "precision": "fp16",
+  "schema": "mm-emotion.capture.v1",
+  "sha256": "4d34f9acaa42f8611a6d9b017d3af9c1b1610c3a1f6020ad387966328656fa07",
+  "shape": [
+    2,
+    1,
+    896
+  ],
+  "split": "test"
+}

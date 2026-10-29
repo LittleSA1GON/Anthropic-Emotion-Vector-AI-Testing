@@ -1,0 +1,38 @@
+{
+  "backend": "hf",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "emotion": "joy",
+  "layer_0based": 5,
+  "layer_selection_on": "validation",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "note": "Exploratory; synthetic dataset, not validated psychology",
+  "origin": "real_model_inference",
+  "precision": "fp16",
+  "test_evaluation_on": "test",
+  "test_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.011250093535760062,
+      "mean_margin": 0.5246343858338962,
+      "median_margin": 0.5246343858338962,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 46.63377990291986
+    }
+  },
+  "trained_on": "train",
+  "validation_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.03765474175008423,
+      "mean_margin": 0.49616774182612167,
+      "median_margin": 0.49616774182612167,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 13.17676655756142
+    }
+  },
+  "vector_l2_norm": 1.0,
+  "vector_method": "mean_diff",
+  "vector_sha256": "5c732a4883c24da03c35a7a71d7d0998a411a27db7a4b8a42e5933127b40ade6"
+}

@@ -1,0 +1,203 @@
+{
+  "schema": "mm-emotion.multi-model.v1",
+  "origin": "real_model_inference",
+  "created_utc": "2026-10-29T21:29:46.246897+00:00",
+  "mode": "sweep",
+  "runtime": {
+    "timestamp_utc": "2026-10-29T21:29:37.729897+00:00",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "git_commit": "unknown",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "gpu_cc": [
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        5
+      ]
+    ],
+    "transformers": "4.57.6"
+  },
+  "models": [
+    {
+      "alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "device": "cuda:0",
+      "decoder_layers": 24,
+      "resolved_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "status": "completed",
+      "seconds": 7.253
+    }
+  ],
+  "configuration": {
+    "layer_0based": 5,
+    "max_new_tokens": 32,
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "seed": 42,
+    "seeds": [
+      42,
+      43
+    ],
+    "provisional_thresholds_approved_for_run": false
+  },
+  "results": [
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": 0.0,
+      "output": {
+        "text": "Before an exam, it's important to review all the topics covered, understand key concepts and formulas, and practice problems from different sources to ensure thorough preparation. After",
+        "duration_seconds": 1.1355927370000245,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": -3.0,
+      "output": {
+        "text": "To prepare for an upcoming exam, it's important to review the topics and key concepts thoroughly, study regularly and practice with plenty of examples, and allocate sufficient time",
+        "duration_seconds": 0.9972122440000248,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": 3.0,
+      "output": {
+        "text": "Before an exam, it's important to study diligently and review key topics thoroughly. This ensures that you have the knowledge needed to perform well on the test.",
+        "duration_seconds": 0.975966494999966,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": 0.0,
+      "output": {
+        "text": "To effectively prepare for an upcoming exam, it's crucial to create a structured study plan that includes daily studying sessions and regular review sessions. Additionally, engaging in regular",
+        "duration_seconds": 0.992030098999976,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": -3.0,
+      "output": {
+        "text": "To prepare effectively for an upcoming exam, it's important to create a study plan that includes reviewing key concepts, practicing questions from previous tests, and establishing a regular",
+        "duration_seconds": 1.0000016299999288,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_212726_acceptance/vectors/qwen05_joy.npz",
+      "vector_hash": "1a3ce4a8c6f659cd6da79e9e89634f1505f99c34e38cf1159fabd8ce96a66f18",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "1dbed6b8ea149deaceb35c41240682a9a33423119dad9e3013a32a24f85f5ffa",
+      "layer_0based": 5,
+      "coefficient": 3.0,
+      "output": {
+        "text": "To effectively prepare for an upcoming exam, one should focus on reviewing key concepts thoroughly, practicing regularly through multiple-choice and essay questions, setting realistic study schedules, and",
+        "duration_seconds": 0.986583497999959,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    }
+  ],
+  "failures": [],
+  "stats": {
+    "outputs": 6
+  }
+}

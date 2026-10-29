@@ -1,0 +1,7 @@
+{
+  "hidden_states": {
+    "layers": [6, 12, 18, 24],
+    "mode": "last_token"
+  },
+  "model_info": {"model": "Qwen/Qwen2-1.5B-Instruct", "purpose": "emotion-vector pilot"}
+}

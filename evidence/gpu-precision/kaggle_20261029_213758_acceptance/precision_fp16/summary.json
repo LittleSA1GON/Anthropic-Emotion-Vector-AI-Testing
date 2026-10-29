@@ -1,0 +1,37 @@
+{
+  "metrics": [
+    {
+      "emotion": "joy",
+      "selected_layer_0based": 5,
+      "test_mean_margin": 0.5246343858338962,
+      "test_n": 2,
+      "test_positive_fraction": 1.0,
+      "val_positive_fraction": 1.0
+    },
+    {
+      "emotion": "calm",
+      "selected_layer_0based": 5,
+      "test_mean_margin": 0.4019354051460797,
+      "test_n": 2,
+      "test_positive_fraction": 1.0,
+      "val_positive_fraction": 1.0
+    },
+    {
+      "emotion": "anger",
+      "selected_layer_0based": 5,
+      "test_mean_margin": 0.3778654669229572,
+      "test_n": 2,
+      "test_positive_fraction": 1.0,
+      "val_positive_fraction": 1.0
+    },
+    {
+      "emotion": "anxiety",
+      "selected_layer_0based": 5,
+      "test_mean_margin": 0.4031355760579354,
+      "test_n": 2,
+      "test_positive_fraction": 1.0,
+      "val_positive_fraction": 1.0
+    }
+  ],
+  "note": "Test results are on a small synthetic matched-pair dataset and not externally validated"
+}

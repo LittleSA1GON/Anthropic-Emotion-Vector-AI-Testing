@@ -1,0 +1,110 @@
+{
+  "schema": "mm-emotion.multi-model.v1",
+  "origin": "real_model_inference",
+  "created_utc": "2026-10-29T21:29:35.816166+00:00",
+  "mode": "infer",
+  "runtime": {
+    "timestamp_utc": "2026-10-29T21:28:29.907150+00:00",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "git_commit": "unknown",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "gpu_cc": [
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        5
+      ]
+    ],
+    "transformers": "4.57.6"
+  },
+  "models": [
+    {
+      "alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "device": "cuda:0",
+      "decoder_layers": 24,
+      "resolved_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "status": "completed",
+      "seconds": 39.278
+    },
+    {
+      "alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp16",
+      "device": "cuda:0",
+      "decoder_layers": 28,
+      "resolved_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "status": "completed",
+      "seconds": 22.213
+    }
+  ],
+  "configuration": {
+    "layer_0based": 5,
+    "max_new_tokens": 64,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": 42,
+    "seeds": [
+      42
+    ],
+    "provisional_thresholds_approved_for_run": false
+  },
+  "results": [
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen05",
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "layer_0based": null,
+      "coefficient": 0.0,
+      "output": {
+        "text": "To prepare effectively for an upcoming exam, it's crucial to create a structured study plan that includes reviewing key concepts, practicing regularly, and seeking help when needed. Additionally, maintaining a healthy lifestyle, including adequate sleep, nutrition, and exercise, can significantly enhance your performance during the exam period.",
+        "duration_seconds": 3.0709732730000496,
+        "new_tokens": 59,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp16",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "layer_0based": null,
+      "coefficient": 0.0,
+      "output": {
+        "text": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+        "duration_seconds": 3.761105870999927,
+        "new_tokens": 64,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    }
+  ],
+  "failures": [],
+  "stats": {
+    "outputs": 2
+  }
+}

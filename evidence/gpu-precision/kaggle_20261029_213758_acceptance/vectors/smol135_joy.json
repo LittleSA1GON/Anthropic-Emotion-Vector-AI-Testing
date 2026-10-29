@@ -1,0 +1,53 @@
+{
+  "backend": "hf",
+  "capture_position": "last_input_token_decoder_block_output",
+  "created_utc": "2026-10-29T21:40:06.318545+00:00",
+  "evaluation": "training_only_not_held_out",
+  "label": "joy",
+  "layer_scores": [
+    {
+      "layer_0based": 5,
+      "layer_position": 0,
+      "margin_std": 0.2617521073292531,
+      "mean_margin": 2.423761992347996,
+      "median_margin": 2.5692944034590735,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 9.259761142244372
+    },
+    {
+      "layer_0based": 11,
+      "layer_position": 1,
+      "margin_std": 0.3673717312520972,
+      "mean_margin": 4.334266053846671,
+      "median_margin": 4.22395878166326,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 11.798039111704046
+    },
+    {
+      "layer_0based": 17,
+      "layer_position": 2,
+      "margin_std": 1.5276057166151311,
+      "mean_margin": 17.971940766207727,
+      "median_margin": 18.33543137108024,
+      "n_pairs": 6,
+      "positive_fraction": 1.0,
+      "standardized_margin": 11.76477710886678
+    }
+  ],
+  "layers_0based": [
+    5,
+    11,
+    17
+  ],
+  "method": "mean_diff",
+  "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "n_pairs": 6,
+  "origin": "real_model_inference",
+  "pairs_sha256": "8e6c8458b14d012151768e20372561b011805030385c3677aa04f8febb243673",
+  "precision": "fp32",
+  "resolved_revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+  "schema": "mm-emotion.quick-vector.v1",
+  "vector_sha256": "1d7030fa42d7629bf5bb60c167f32ffbca8183a3908d519cf801173f8eb04811"
+}

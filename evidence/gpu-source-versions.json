@@ -1,0 +1,14 @@
+[
+  {
+    "kernel": "acceptance",
+    "version": 2,
+    "notebook_sha256": "5d460471eb99afdac5cfc196a97c371b8f6c7a5c7cf6df2e1d72f20c5ae81254",
+    "embedded_source_zip_sha256": "1b297c1262e572cb4db7e1110b0b6a4774e84c4ea268701a0327cd0defb9f921"
+  },
+  {
+    "kernel": "precision",
+    "version": 1,
+    "notebook_sha256": "fd1b8c08cb44347219bee2ee837d5b1de39a16eb891a98e006d7acdd476c07e1",
+    "embedded_source_zip_sha256": "ade4b50261a20d17c12fd22da9c1688dba122cd579216022295c4c76b635640b"
+  }
+]

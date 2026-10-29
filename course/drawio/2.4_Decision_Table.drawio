@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" modified="2026-10-29T00:00:00.000Z" agent="Model Mountain CMPE187" version="24.7.0" type="device">
+  <diagram name="2.4 Decision Table" id="2.4-decision-table">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="header" value="Context classification decision table (all 3 emotions repeat these 6 rows)" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#F3F6FB;strokeColor=#64748B;fontColor=#172554;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="65" width="1150" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="h0" value="Abstraction" style="rounded=0;whiteSpace=wrap;fillColor=#DBEAFE;strokeColor=#93C5FD;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="175" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" value="Diction" style="rounded=0;whiteSpace=wrap;fillColor=#DBEAFE;strokeColor=#93C5FD;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="220" y="160" width="170" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" value="Intensity" style="rounded=0;whiteSpace=wrap;fillColor=#DBEAFE;strokeColor=#93C5FD;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="395" y="160" width="205" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" value="Proposed cosine range" style="rounded=0;whiteSpace=wrap;fillColor=#DBEAFE;strokeColor=#93C5FD;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="605" y="160" width="210" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="h4" value="Original PDF bound status" style="rounded=0;whiteSpace=wrap;fillColor=#DBEAFE;strokeColor=#93C5FD;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="820" y="160" width="270" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="r0c0" value="Objective" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r0c1" value="Standard" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="220" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r0c2" value="Neutral" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="220" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r0c3" value="&lt;=0.20" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="220" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r0c4" value="Consistent" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="220" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r1c0" value="Objective" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="297" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r1c1" value="Expressive" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="297" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r1c2" value="Neutral/Moderate" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="297" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r1c3" value="0.20 to 0.50" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="297" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r1c4" value="Reversed inequality" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="297" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c0" value="Stated" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="374" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c1" value="Standard" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="374" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c2" value="Moderate" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="374" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c3" value="0.50 to 0.60" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="374" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r2c4" value="Reversed inequality" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="374" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r3c0" value="Stated" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="451" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r3c1" value="Expressive" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="451" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r3c2" value="Moderate" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="451" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r3c3" value="0.60 to 0.70" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="451" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r3c4" value="Reversed inequality" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="451" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r4c0" value="Enacted" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="528" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r4c1" value="Standard" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="528" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r4c2" value="Moderate/High" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="528" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r4c3" value="0.70 to 0.80" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="528" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r4c4" value="Reversed inequality" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="528" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r5c0" value="Enacted" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="605" width="175" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r5c1" value="Expressive" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="220" y="605" width="170" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r5c2" value="High" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="395" y="605" width="205" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r5c3" value="0.70 to 1.00" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="605" y="605" width="210" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="r5c4" value="Reversed inequality" style="rounded=0;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#CBD5E1;fontSize=13;spacing=7;" vertex="1" parent="1">
+          <mxGeometry x="820" y="605" width="270" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="Operational thresholds are proposed, not validated; explicit approval is required to assign pass/fail. Neutral rows are intentionally labeled neutral even though original tables show the target emotion." style="rounded=0;whiteSpace=wrap;fillColor=#FFF7ED;strokeColor=#FDBA74;fontSize=14;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="730" width="1100" height="85" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,3 @@
+neutral_prompt,emotion_prompt,emotion,split,scenario_id,source,id
+"Situation: I have an important presentation tomorrow. I am reviewing my plan without a particular emotional reaction. Give one practical suggestion.","Situation: I have an important presentation tomorrow. I feel nervous and uncertain. Give one practical suggestion.",anxiety,train,example_presentation_1,user_created,example_anxiety_1
+"Situation: I have a meeting with a mentor tomorrow. I am considering the meeting without a particular emotional reaction. Give one practical suggestion.","Situation: I have a meeting with a mentor tomorrow. I feel nervous and uncertain. Give one practical suggestion.",anxiety,train,example_meeting_2,user_created,example_anxiety_2

@@ -1,0 +1,8 @@
+python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+python -m pip install -r requirements-dev.txt -r requirements-ui.txt
+python -m pytest -q
+python -m mm_emotion.cli validate
+python scripts/build_notebook.py
+python scripts/build_release.py
+
+Actual model experiments: see docs/QUICKSTART.md. CPU checks do not establish behavioral effects.

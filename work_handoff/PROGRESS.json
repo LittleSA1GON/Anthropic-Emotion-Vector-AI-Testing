@@ -1,0 +1,119 @@
+{
+  "status_as_of": "2026-10-29",
+  "source": "User-supplied v3 FULL ZIP imported into GitHub repository",
+  "verified": [
+    "32 CPU tests pass including real torch tensor hook checks",
+    "32 tests pass from notebook-restored source",
+    "18-case classifications and 48-pair dataset validated",
+    "3 Streamlit pages load without exceptions",
+    "Kaggle credential authenticated; stored outside repository",
+    "12-page measured portable PDF inspected; exact DOCX rendering unavailable without LibreOffice",
+    "Kaggle T4 two-model inference and 12 controlled generations completed",
+    "36 real course matrix records; all thresholds ungraded",
+    "Qwen 1.5B FP16 overflow detected and explicitly rerun in FP32",
+    "SmolLM2 135M second-family acceptance completed on T4",
+    "54 distinct model/precision/case records, all ungraded",
+    "18 selected generation records across three models; repeated Qwen replication also retained",
+    "FP16/NF4 real direction cosines at block5: joy0.7936 calm0.7704 anger0.7997 anxiety0.8062",
+    "Git attributes preserve exact source/artifact bytes across Windows and Linux checkouts"
+  ],
+  "unverified": [
+    "GTX 1080 Ti hardware execution",
+    "IBM MIA execution",
+    "Instructor threshold and neutral-label semantics approval",
+    "Original Model Mountain v4 integration",
+    "Exact Word DOCX pagination without LibreOffice"
+  ],
+  "next_task": "External: instructor threshold/neutral-label approval; optional MIA and original v4 integration",
+  "completed_task_ids": [
+    "T00",
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T07",
+    "T10"
+  ],
+  "changed_files": [
+    "mm_emotion/artifacts.py",
+    "mm_emotion/blinding.py",
+    "mm_emotion/cli.py",
+    "mm_emotion/course_notebook_ui.py",
+    "mm_emotion/course_report.py",
+    "mm_emotion/course_tests.py",
+    "mm_emotion/credentials.py",
+    "mm_emotion/dataset.py",
+    "mm_emotion/drawio.py",
+    "mm_emotion/hf_backend.py",
+    "mm_emotion/mia_backend.py",
+    "mm_emotion/mia_steering.py",
+    "mm_emotion/model_mountain_bridge.py",
+    "mm_emotion/multi_model.py",
+    "mm_emotion/notebook_ui.py",
+    "mm_emotion/packaging.py",
+    "mm_emotion/pipeline.py",
+    "mm_emotion/vectors.py",
+    "mm_emotion/workbench.py",
+    "mm_emotion/__init__.py",
+    "app_emotion.py",
+    "pages/1_Multi_Model_Experiments.py",
+    "scripts/build_notebook.py",
+    "scripts/build_release.py",
+    "scripts/gpu_acceptance.py",
+    "scripts/export_report_pdf.py",
+    "docs/QUICKSTART.md",
+    "docs/DEVELOPMENT_BRIEF.md",
+    "pytest.ini",
+    ".github/workflows/tests.yml",
+    ".gitattributes"
+  ],
+  "evidence_paths": [
+    "evidence/cpu-tests.xml",
+    "course/generated/CMPE187_Deliverable_2.docx",
+    "course/generated/CMPE187_Deliverable_2.pdf",
+    "evidence/course-matrix.json",
+    "evidence/gpu-source-versions.json",
+    "evidence/gpu-v1",
+    "evidence/gpu-v2",
+    "evidence/gpu-precision",
+    "evidence/ui-check.json",
+    "notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb",
+    "dist/Model_Mountain_Emotion_Lab_FULL.zip"
+  ],
+  "important": "Do not claim real model experimental outputs until GPU evidence is generated. Update this file after each Work milestone.",
+  "kaggle_acceptance": {
+    "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab-acceptance",
+    "version": 2,
+    "status": "completed"
+  },
+  "task_progress": {
+    "T00": "CPU and notebook source reconstruction verified",
+    "T01": "Complete on actual Kaggle T4: Qwen 0.5B FP16 and Qwen 1.5B FP32; FP16 1.5B overflow failure retained",
+    "T02": "54 measured cases consolidated across three checkpoints; all ungraded_provisional_thresholds",
+    "T03": "Native per-checkpoint vectors with layer scans; -3/0/+3 at seeds42/43; zero controls; per-run provenance and blind export verified",
+    "T04": "All three Streamlit pages load; Kaggle panels execute real model path; individual credentials supported",
+    "T05": "Measured Sections1-4 plus full 18-input appendix, four editable diagrams, DOCX and portable PDF; exact Word pagination unverified",
+    "T06": "Pending instructor approval; no silent grading",
+    "T07": "Completed on T4: SmolLM2 135M second-family inference/vector/matrix; matched Qwen0.5 FP16/NF4 captures and comparison, same layer5/data/checkpoint",
+    "T08": "Optional IBM MIA remains untested",
+    "T09": "Original v4 source absent; standalone extension preserved",
+    "T10": "Real JSON/CSV/vector evidence consolidated, measured report generated, final source ZIP and self-contained notebook assembled"
+  },
+  "blockers": [
+    "No local CUDA GPU (Intel Iris Xe only)",
+    "No LibreOffice for exact DOCX layout verification",
+    "Instructor threshold/neutral semantics approval absent",
+    "Original Model Mountain v4 archive not provided"
+  ],
+  "kaggle_precision": {
+    "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab-precision",
+    "version": 1,
+    "status": "completed"
+  },
+  "kaggle_shareable": {
+    "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab",
+    "visibility": "private",
+    "saved_without_execution": true
+  }
+}

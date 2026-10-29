@@ -1,0 +1,9 @@
+# Preserve exact artifact and source bytes so published checksums work on every OS.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.pdf binary
+*.docx binary
+*.npz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary

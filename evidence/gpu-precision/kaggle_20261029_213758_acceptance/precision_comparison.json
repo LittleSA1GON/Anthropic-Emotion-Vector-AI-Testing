@@ -1,0 +1,37 @@
+{
+  "caution": "Cosine similarity alone does not demonstrate causal or behavioral preservation",
+  "comparable": true,
+  "cosine_by_emotion_layer": [
+    {
+      "direction_cosine": 0.793643646887818,
+      "emotion": "joy",
+      "layer_0based": 5,
+      "precision_a": "fp16",
+      "precision_b": "nf4"
+    },
+    {
+      "direction_cosine": 0.7704426798890386,
+      "emotion": "calm",
+      "layer_0based": 5,
+      "precision_a": "fp16",
+      "precision_b": "nf4"
+    },
+    {
+      "direction_cosine": 0.7996551577573742,
+      "emotion": "anger",
+      "layer_0based": 5,
+      "precision_a": "fp16",
+      "precision_b": "nf4"
+    },
+    {
+      "direction_cosine": 0.8061847770767476,
+      "emotion": "anxiety",
+      "layer_0based": 5,
+      "precision_a": "fp16",
+      "precision_b": "nf4"
+    }
+  ],
+  "run_a": "runs/kaggle_20261029_213758_acceptance/precision_fp16",
+  "run_b": "runs/kaggle_20261029_213758_acceptance/precision_nf4",
+  "schema": "mm-emotion.comparison.v1"
+}

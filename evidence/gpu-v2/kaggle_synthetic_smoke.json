@@ -1,0 +1,81 @@
+{
+  "contains_real_model_activations": false,
+  "origin": "SYNTHETIC_NUMERICAL_SMOKE_ONLY",
+  "selected_layer_0based": 5,
+  "test_metrics": [
+    {
+      "layer_position": 0,
+      "margin_std": 0.055122879323678126,
+      "mean_margin": 0.9340146900650328,
+      "median_margin": 0.9340146900650328,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 16.944228993927485
+    },
+    {
+      "layer_position": 1,
+      "margin_std": 0.09126639838768796,
+      "mean_margin": 0.7703614678582655,
+      "median_margin": 0.7703614678582655,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 8.440800573567818
+    },
+    {
+      "layer_position": 2,
+      "margin_std": 0.2585928517935591,
+      "mean_margin": 0.7749316091976292,
+      "median_margin": 0.7749316091976292,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 2.9967247888827013
+    },
+    {
+      "layer_position": 3,
+      "margin_std": 0.17703122631138066,
+      "mean_margin": 0.8117213183428333,
+      "median_margin": 0.8117213183428333,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 4.585187230839686
+    }
+  ],
+  "val_metrics": [
+    {
+      "layer_position": 0,
+      "margin_std": 0.09030404938937346,
+      "mean_margin": 0.901684711689959,
+      "median_margin": 0.901684711689959,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 9.984986473885243
+    },
+    {
+      "layer_position": 1,
+      "margin_std": 0.006008208769184962,
+      "mean_margin": 0.7393794413798749,
+      "median_margin": 0.7393794413798749,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 123.06154292973656
+    },
+    {
+      "layer_position": 2,
+      "margin_std": 0.042374921126182685,
+      "mean_margin": 0.7749882644797572,
+      "median_margin": 0.7749882644797572,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 18.2888426428458
+    },
+    {
+      "layer_position": 3,
+      "margin_std": 0.17131616683985465,
+      "mean_margin": 0.7704044879019245,
+      "median_margin": 0.7704044879019245,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 4.496974816288612
+    }
+  ]
+}

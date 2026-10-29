@@ -1,0 +1,13 @@
+{
+  "model_id": "Qwen/Qwen2-1.5B-Instruct",
+  "fp16_backend": "hf",
+  "nf4_backend": "hf",
+  "mia_backend": "mia",
+  "layers_0based": [5, 11, 17, 23],
+  "dataset": "data/emotion_pairs_v1.jsonl",
+  "max_model_len": 512,
+  "seed": 42,
+  "splits": ["train", "validation", "test"],
+  "emotions": ["joy", "calm", "anger", "anxiety"],
+  "status": "configuration_only_no_empirical_results"
+}

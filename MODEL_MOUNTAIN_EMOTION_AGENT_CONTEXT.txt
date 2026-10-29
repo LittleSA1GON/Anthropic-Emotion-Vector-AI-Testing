@@ -1,0 +1,376 @@
+MODEL MOUNTAIN EMOTION LAB v0.2 — INTERACTIVE WORKBENCH UPDATE (2026-10-28)
+
+The primary operator flow has changed from CLI-only to a visual research workbench.
+- Local: pip install requirements-hf.txt and requirements-ui.txt, then streamlit run app_emotion.py
+- Kaggle: in the self-contained notebook set OPEN_INTERACTIVE_WORKBENCH=True, run the interactive controls cell. UI uses ipywidgets; load weights only on button click.
+- Enter/edit/export CSV, JSONL or JSON matched prompt pairs in UI; find vectors across chosen 0-based layers; apply only a chosen block vector with strength/sign/phase controls; produce baseline comparison and dose sweeps.
+- Source map: docs/WORKBENCH_OPERATOR_GUIDE.md, app_emotion.py, mm_emotion/notebook_ui.py, mm_emotion/workbench.py, mm_emotion/hf_backend.py.
+- Saved real session outputs: runs/workbench_sessions. Fitted quick vectors: runs/workbench_vectors. Manual datasets: runs/workbench_datasets.
+- Zero-coefficient condition has no hook; hooks detached in finally; cross-precision requires opt-in, cross-model vector reuse blocked.
+- Quick-fit layer measures are IN-SAMPLE ONLY, not held-out validation. The CLI full run remains necessary for valid validation/test metrics.
+- 18 CPU unit tests plus full default Kaggle notebook CPU reconstruction passed. Real GPU/MIA/GUI browser tests remain UNVERIFIED.
+- The original Model Mountain v4 source archive still could not be materialized; this is a companion suite, not a source-level merge.
+
+Canonical machine handoff: docs/AGENT_HANDOFF.json
+Canonical operator instructions: docs/WORKBENCH_OPERATOR_GUIDE.md
+
+---------------- ORIGINAL CONTEXT BELOW ----------------
+
+MODEL MOUNTAIN EMOTION LAB - COMPLETE AGENT CONTEXT (2026-10-28)
+All executable code and dataset are in the companion ZIP.
+
+========================================================================================
+AGENTS.md
+========================================================================================
+
+# AGENT ENTRYPOINT — MODEL MOUNTAIN EMOTION LAB
+
+**Read `docs/AGENT_DATASHEET.md` next.** It is the canonical handoff: task, repository paths, verified status, commands, acceptance criteria, GPU decision tree, and remaining work. Do not spend time re-discovering the project.
+
+Current state 2026-10-28: files created; dataset generated; CPU unit tests pass; CPU-only synthetic smoke passes; NO real GPU inference; NO MIA validation; NO empirical emotion behavior findings.
+
+**Immediate objective:** run a real Qwen2 1.5B FP16 vs NF4 pilot on a Kaggle T4 with the `hf` backend, validate artifact provenance, and then expand. Test optional MIA only afterward.
+
+**Constraints:** Never claim synthetic = real evidence. Never use an uncalibrated emotion score as a Model Mountain security authorization signal. Do not silently modify the existing Model Mountain v4 gateway. Preserve train/validation/test leakage prevention and match model IDs/dataset hashes for quantization comparisons.
+
+**First commands:** `python -m pytest -q && python -m mm_emotion.cli validate && python -m mm_emotion.cli doctor`.
+
+**Archive limitation:** Model Mountain v4 (`Model_Mountain_v4_Multiagent_Workflow_COMPLETE.zip`) was discoverable in prior-project Library but could not be materialized to inspect its source bytes in the authoring environment. This project is a **standalone compatible research extension**, not a verified patch into that archive. A future agent with the original archive must inspect v4's module signatures before creating a direct import bridge.
+
+========================================================================================
+docs/AGENT_DATASHEET.md
+========================================================================================
+
+# AGENT DATASHEET — MODEL MOUNTAIN EMOTION VECTOR RESEARCH
+
+**Canonical handoff | version 0.1.0 | snapshot 2026-10-28 | owner: user | purpose: zero-discovery continuation.**
+
+Read this entire file before making code changes. This sheet contains the project objective, verified state, exact implementation map, experiment design, hardware instructions, executable next actions, acceptance criteria, known obstacles, and documentation links. If a claim cannot be demonstrated by saved evidence, report it as *not verified*.
+
+## A. One-minute executive specification
+
+**Project:** Model Mountain — Emotion Vector Research Suite. A research companion to the user's Model Mountain v4 Enterprise AI Security project. Compare internal model activation directions associated with emotion-related scenarios, test whether 4-bit weight quantization preserves these directions, and carry out activation interventions. Primary model: `Qwen/Qwen2-1.5B-Instruct`; primary experiment: FP16 vs bitsandbytes NF4 on *identical* weights / model ID; optional second backend: IBM vLLM-Hook MIA `capture_hs` + `steer` on Kaggle T4. Local GTX 1080 Ti runs HF only.
+
+**Scientific question:** Are layerwise direction vectors estimated from matched neutral/emotion contexts similar across full- and low-precision weight representations, and does intervention with those vectors cause measurable changes in language-model outputs without large benign utility costs?
+
+**Hypothesis:** contrastive vectors remain positively aligned across FP16/NF4 at some layers, and causal interventions shift human-judged emotional tone; both claims unproven. Null: no greater-than-chance generalization or controllable behavioral effect under held-out evaluation. Human judges, paraphrase and control tasks needed before paper claims.
+
+**Actual state:** CPU-only unit tests passed; dataset generated; GPU code written but not executed; synthetic smoke passed only as numerical plumbing; MIA install and engine startup NOT checked on Kaggle. `README.md` contains quick commands, this document contains the exact next tasks.
+
+**Important Model Mountain provenance:** User's prior v4 archive is `Model_Mountain_v4_Multiagent_Workflow_COMPLETE.zip` in Library folder `/SpartHills`. Prior discussions identify modules for prompt injection, RAG poisoning, agent authorization, MCP trust, model extraction/distillation admission, MIA observability, behavioral-vector discovery, a dashboard, tests, and Kaggle notebook. **Source bytes were not accessible when this suite was created (materialize authorization error).** Therefore we did not directly modify or copy any v4 source and cannot assert code-level compatibility or verify v4's last test status. Our deliverable is independent, with an explicit, safe overlay importer and exported evidence contract.
+
+## B. Immediate actions, in order (do these rather than repository discovery)
+
+1. **CPU sanity:** in suite root run `python -m pip install -r requirements-core.txt && python -m pytest -q && python -m mm_emotion.cli validate && python -m mm_emotion.cli smoke --out runs/synthetic_smoke.json`. Expected: 10 tests; 48 prompt pairs with 6/3/3 scenarios per emotion; smoke marked `SYNTHETIC_NUMERICAL_SMOKE_ONLY`. Current run observed: 10 tests passing. Capture stdout in `logs/cpu_preflight.txt`.
+2. **Acquire T4 runtime:** Kaggle Notebook -> Settings -> Accelerator -> GPU T4 x2 (if available), enable Internet. Import `notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb` only; it embeds this suite. Run restore/preflight cells. Confirm `torch.cuda.is_available()` and compute capability `>=7.5` via `doctor` before any MIA attempt. *Single T4 is sufficient for Qwen2 1.5B; T4x2 is two distinct 16 GiB devices*.
+3. **GPU baseline:** set `RUN_REAL_HF=True`, `RUN_NF4=False`, `RUN_MIA=False`, `PILOT=True` in notebook; run HF FP16. New output `runs/kaggle_<timestamp>_fp16/`. Confirm nonzero output arrays, FP32 finite values, correct shape `[2,4,hidden_size]` for each emotion/split and working baseline generation.
+4. **GPU quantized:** set `RUN_NF4=True` and rerun from start (new run ID). Same HF weights, tokenizer and layers. Confirm quantized load and nonempty real activations. Run `compare` and inspect cosine values per emotion/layer.
+5. **Reproduce:** run both with `PILOT=False` (all 48 matched pairs) in newly named run dirs, ensure no overwrites, and save `manifest.json`, `summary.csv`, `comparison.json`, generations and exact notebook output package. `runs/` is gitignored; export to durable storage.
+6. **Intervention:** review baseline/steered results at coefficients `0,3,6`, and label using a blinded response-rating template. Separate human judgments of emotion tone and task quality. The quick pipeline records real outputs but does NOT infer sentiment accuracy from text automatically.
+7. **MIA option:** only after HF succeeds, isolate MIA in its own venv and run the `mia` backend on Kaggle T4 using `scripts/install_mia_kaggle.sh`. Capture is *different worker from steering*, thus a separate process. If installation or probes fail, record logs/errors and proceed with HF research; do not fabricate the MIA results.
+8. **MIA validation:** require actual nonempty finite `capture_hs` output for all selected layers; tokenization/decoder naming parity with HF; vector export `vectors/<emotion>_mia.pt`; `mia-steer` results for baseline vs nonzero coefficients. Report any MIA-vs-HF mismatch as an environment/semantic problem, not as a scientific result.
+9. **Scale:** expand corpus to >=100 distinct *scenario groups per emotion*, balanced and paraphrase-controlled, add diverse lexical formulations and non-emotional control conditions, reserve an unseen test set. Add bootstrap confidence intervals and multiple runs with separate seeds.
+10. **Integrate into v4:** with the original ZIP actually available locally, inspect its `model_mountain` vector/MIA modules, identify exact API signatures, and add the project as `experiments/emotion_vectors/` via `scripts/install_into_model_mountain.py`. Consume exported evidence in dashboard only. Do not alter the gateway authorization or safety controls.
+11. **Results/paper:** produce a compact methods/results table: model, precision, backend/version, GPU, context, sample counts, selected layers, vector cosine and CI, human-rated causal effects, task regression, latency/memory. Explicitly disclose pilot limitations and all failures.
+12. **Review:** run tests and audit no claims of anthropomorphic feeling, confirmed MIA-GPU operation without logs, or synthetic numerical outcomes as empirical evidence.
+
+## C. Exact commands, runnable from repository root
+
+```bash
+# No GPU / no model download
+python -m pip install -r requirements-core.txt
+python -m pytest -q
+python -m mm_emotion.cli doctor
+python -m mm_emotion.cli validate --data data/emotion_pairs_v1.jsonl
+python -m mm_emotion.cli smoke --out runs/synthetic_smoke.json
+
+# Real HF pilot; requires GPU and torch+requirements-hf.txt installed
+python -m mm_emotion.cli run --backend hf --model Qwen/Qwen2-1.5B-Instruct --precision fp16 \
+  --layers 5,11,17,23 --limit-per-split 2 --generate-samples 2 --out runs/fp16_pilot
+python -m mm_emotion.cli run --backend hf --model Qwen/Qwen2-1.5B-Instruct --precision nf4 \
+  --layers 5,11,17,23 --limit-per-split 2 --generate-samples 2 --out runs/nf4_pilot
+python -m mm_emotion.cli compare --run-a runs/fp16_pilot --run-b runs/nf4_pilot --out runs/compare_pilot.json
+
+# Full 48-pair pilot corpus: new directories; omit --limit-per-split or pass 0
+python -m mm_emotion.cli run --backend hf --model Qwen/Qwen2-1.5B-Instruct --precision fp16 \
+  --layers 5,11,17,23 --generate-samples 3 --out runs/fp16_full
+python -m mm_emotion.cli run --backend hf --model Qwen/Qwen2-1.5B-Instruct --precision nf4 \
+  --layers 5,11,17,23 --generate-samples 3 --out runs/nf4_full
+python -m mm_emotion.cli compare --run-a runs/fp16_full --run-b runs/nf4_full --out runs/compare_full.json
+
+# MIA, after independent official requirements installed; must launch as standalone process
+python -m mm_emotion.cli run --backend mia --model Qwen/Qwen2-1.5B-Instruct --precision fp16 \
+  --layers 5,11,17,23 --mia-config configs/mia_capture_qwen2_1p5b.json \
+  --limit-per-split 2 --aperture-mib 512 --out runs/mia_pilot
+python -m mm_emotion.cli mia-steer --run runs/mia_pilot --emotion anxiety \
+  --out runs/mia_anxiety_steer --coefficients 0,3,6 --max-examples 3
+
+# Read-only Model Mountain research evidence output
+python -m mm_emotion.cli export-evidence --run runs/fp16_full \
+  --out runs/fp16_full/model_mountain_evidence.json
+
+# Optional read-only dashboard
+python -m pip install streamlit pandas
+streamlit run app_emotion.py
+
+# v4 optional overlay, after downloading the original v4 ZIP
+python scripts/install_into_model_mountain.py --root /path/to/extracted-v4
+python scripts/install_into_model_mountain.py --root /path/to/extracted-v4 --apply
+```
+
+## D. Files and exact responsibilities
+
+| File | Purpose/API | Data contract |
+|---|---|---|
+| `mm_emotion/dataset.py` | `load_pairs`, `validate_pairs`, `select_pairs`, `dataset_sha256` | JSONL; 4 emotions, 3 splits, no cross-split scenario overlap |
+| `scripts/make_dataset.py` | Deterministic synthetic 48-pair dataset builder | `data/emotion_pairs_v1.jsonl` |
+| `mm_emotion/hf_backend.py` | `HFBackend.capture(prompt, layer_ids)` and `.generate(...)` with block hooks | capture `[L,H]` float32, prefill last prompt token; steer last token per forward |
+| `mm_emotion/mia_backend.py` | `MIABackend.capture` with IBM MIA `capture_hs` | analyzer `hidden_states` output, 1-based config to 0-based naming conversion |
+| `mm_emotion/vectors.py` | `normalized_difference`, `pairwise_pca_direction`, `layer_metrics`, `select_layer`, `cosine` | mean difference per layer; unit L2 direction; validation-only layer selection |
+| `mm_emotion/pipeline.py` | `run_experiment`, `compare_runs` | per-emotion train/val/test captures, vector, summaries, generation samples |
+| `mm_emotion/mia_steering.py` | `run_steering` | new separate `steer` worker, real outputs, blinded annotation template |
+| `mm_emotion/artifacts.py` | save/load verified `.npz`, manifest, JSONL, runtime | checksums and source provenance |
+| `mm_emotion/model_mountain_bridge.py` | `export_evidence` | read-only security-neutral research evidence |
+| `mm_emotion/cli.py` | `doctor`, `validate`, `smoke`, `run`, `compare`, `mia-steer`, `export-evidence` | stable command interface |
+| `configs/mia_capture_qwen2_1p5b.json` | MIA 1-based hidden-state layer indices | `[6,12,18,24]` maps to `[5,11,17,23]` |
+| `scripts/install_mia_kaggle.sh` | IBM official pip install in isolated venv, records fetched commit | separate CUDA13 environment; GPU execution unverified |
+| `scripts/install_into_model_mountain.py` | Safe sidecar v4 overlay; dry-run default | refuses overwrite, never changes original security gateway |
+| `app_emotion.py` | Browse real metrics and generated examples | no inference and no security policy actions |
+| `tests/` | 10 CPU tests, including integration with *fake* backend | test artifacts have no real model evidentiary value |
+| `notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb` | Whole suite embedded in one notebook | notebook restores project; GPU cells opt-in |
+
+## E. Dataset design and metric caveats
+
+Corpus has 12 unique scenarios, each reused across the same four emotion types but assigned to only one split, preventing scenario leakage: 6 train / 3 validation / 3 test per emotion. 4 emotions: `joy`, `calm`, `anger`, `anxiety`. Each JSONL row holds `id`, `scenario_id`, `emotion`, `split`, `neutral_prompt`, `emotion_prompt`, `source`, `annotation_note`. The dataset SHA256 is stored in run manifest. Corpus and feeling descriptions are authored synthetic language; lexical features (e.g. 'angry') are **not controlled** and can confound results. Do NOT claim emotion concept isolation.
+
+**Captures:** for each text, run one prefill-only model forward pass and save decoder BLOCK output for the last prompt token. Output `positive` and `neutral` float32 arrays of `[N,L,H]`. MIA config specifies 1-based layer capture indices; the suite uses 0-based physical decoder block indexes throughout. Both methods might differ in chat formatting or hook location; parity must be explicitly checked. No output-sample labels are inferred from activation sign.
+
+**Fitting:** train-only mean difference `v_l = mean(h_emotion - h_neutral)` normalized by L2 per layer. This is a candidate functional direction, not a proven psychological concept. **Selection:** use held-out validation pair margins `dot(h_emotion-h_neutral, v_l)` to choose the layer with highest fraction positive, breaking ties by highest mean margin; this is frozen before test. **Holdout:** test positive fraction, mean margin, median, standard deviation, by layer and chosen layer. All figures are descriptively exploratory; only 3 held-out scenarios per emotion. **Cross precision:** cosine similarity between matched FP16 and NF4 vectors, layerwise. `.compare` refuses model-ID/dataset/layer mismatches. Cosine doesn't establish steering causality. **Intervention:** add `alpha*v` to the last token state at chosen decoder block during prefill/decode, compare deterministic generations with `alpha=0,3,6`. Different backends/quantization may have different effective coefficient scaling; run dose-response sweeps; judge blindly.
+
+**Further controls before publish:** paraphrase heldouts, shuffled emotion labels, random vectors with matched norm, opposing-direction steering, purely stylistic adjective controls, neutral factual reasoning tasks, semantic semantic similarity of matched pairs, blind multi-annotator ratings, confidence intervals with scenario-level bootstrap, multiple independent runs, balanced prompt lengths, manual tokenization parity tests, safety and utility checks.
+
+## F. Hardware and dependency matrix
+
+| Hardware | HF FP16 | HF NF4 | IBM MIA | Assessment |
+|---|---|---|---|---|
+| GTX 1080 Ti 11 GiB, Pascal CC6.1 | Yes, slower | Yes with compatible sm_61 bitsandbytes CUDA 12.x wheel | No, current vLLM engine needs newer CC | Use HF, do not install MIA there |
+| Kaggle T4 16 GiB, Turing CC7.5 | Yes | Yes | Hardware meets CC; installation+MIA still unverified | Preferred free test GPU |
+| Kaggle T4x2 | Yes (on device0) | Yes (on device0) | TP support exists but this suite defaults TP=1 | 16 GiB per GPU, not a unified 32 GiB |
+| RTX 3090 24 GiB | Yes | Yes | Hardware suitable; unverified in project | Faster independent machine |
+| H100 80 GiB | Yes | Yes | IBM validated MIA on H100 | Strongest MIA path |
+
+Official IBM MIA repo currently documents Linux + CUDA13 driver, Python 3.11-3.14, vLLM 0.29 and torch 2.13 as validated stack, H100 80 GiB validation, default 4GiB GPU aperture. The suite reduces aperture to 512 MiB and vLLM memory utilization to 0.55 on T4 as an **unverified pilot setting**. Always preserve exact install logs and `MIA_COMMIT_PIN.txt` for reproduction. On 1080 Ti, run `scripts/setup_gtx1080ti.ps1` (Windows) or `scripts/setup_gtx1080ti.sh` (Linux/WSL2), installing official PyTorch 2.14.1 CUDA12.6 and requirements-hf. PyTorch/bitsandbytes builds MUST retain Pascal sm61; not all later CUDA13 wheels do.
+
+## G. Artifact contracts and validation gates
+
+**Outputs under a new run directory:**
+
+- `manifest.json`: `schema=mm-emotion.run.v1`, `status` (complete/failed), `origin=real_model_inference`, model ID, precision, backend, data hash, layers, count, runtime GPU and Python versions. A run is only empirical if GPU model calls really occurred; a file alone does not prove that.
+- `captures/<emotion>_<split>.npz`: `positive` and `neutral` float32 `[N,L,H]`, string pair IDs and 0-based layer list. `.json` sibling contains sha256, origin and split provenance. Model should have finite nonzero variance across scenarios.
+- `vectors/<emotion>.npz`: all fitted normalized per-layer vectors and selected layer. `.json` contains validation and test metrics and vector checksum. `_mia.pt` contains `{'dir': torch.Tensor [H]}` for official `add_vector` worker.
+- `summary.json/.csv`: test/validation descriptive summaries; must clearly say author-created synthetic prompts.
+- `generations/<emotion>.jsonl` (HF optional): deterministic real baseline/interventions, timing and prompt.
+- `mia steering` directory: `steering_results.jsonl`, `blinded_annotations.csv`, `blinding_key_PRIVATE.json`, `provenance.json`. Never distribute private key to annotators until ratings are locked.
+- `comparison.json`: accepted only if exact model ID, source dataset checksum and decoder layer list match. A separate paper should document actual FP16/NF4 model weight provenance and tokenizer versions as an additional quality step.
+- `model_mountain_evidence.json`: schema `model-mountain.research.evidence.v1`; `not_a_security_verdict=true`; `security_policy_effect=none`.
+
+**Acceptance criteria for first GPU milestone:** (1) `doctor` shows actual T4, (2) manifest status complete, (3) capture file checksum passes `load_capture`, (4) every train/validation/test emotion has >=2 samples, (5) no NaNs/zero vectors, (6) held-out summary generated, (7) generation baseline and nonzero coefficient differ on at least one sample without engine errors (not necessarily proof steering improves tone), (8) real trace is separate from simulated smoke, (9) no use of test data to choose layer.
+
+**First MIA milestone acceptance:** (1) actual import succeeds, (2) `MiaLLM` starts under CUDA13-compatible driver, (3) `capture_hs` returns nonempty analyzer output matching 0-based layer IDs, (4) MIA capture pass recorded, (5) steering worker obtains different output on selected test sample for nonzero coefficient, (6) both runs record commit and GPU. Without all, mark NOT VERIFIED.
+
+## H. Known blockers and exact fixes
+
+1. **Unable to access original Model Mountain v4 raw ZIP:** This session's Library `files.materialize` reported `This Project file does not have an authorized raw-byte materialization path.`. Do not assert a direct code merge. When an agent gains local file access, extract the original archive, inspect `model_mountain` modules, and run the overlay script. No blocker to independent experiment.
+2. **Kaggle T4 vLLM/MIA dependency conflicts:** keep HF experiment in Kaggle's default env; MIA in new `.venv-mia` using `scripts/install_mia_kaggle.sh`. If CUDA driver/torch pip dependency fails, keep logs in `logs/mia_install.txt`; don't downgrade main notebook or claim MIA ran. MIA installation may consume substantial disk/quota.
+3. **Kaggle environment GPU missing:** notebook Settings -> Accelerator -> GPU T4; do not continue if `torch.cuda.is_available` false. If no T4 quota, run HF locally on GTX1080Ti with SM61-capable torch+bnb build.
+4. **FP16 OOM:** 1.5B pilot should fit on 16 GiB T4, but lower `--max-length` or `--generate-samples`; if 3B/7B scale, NF4 required. MIA additionally consumes aperture; lower GPU memory utilization and reuse 512 MiB capture buffer if supported.
+5. **MIA no matched layers / empty probes:** verify MIA uses model path `model.layers.N`, config 1-based layers `[6,12,18,24]`, `hs_mode=last_token`, prefill capture, reset prefix cache, output shape and probe counts. Inspect IBM official config docs and record exact failure before changing hook code.
+6. **MIA vs HF mismatch:** ensure raw chat-rendered prompts, token IDs, padding, dtype, block hook position and prefill-vs-decode match. Do not present cosine comparisons across different architectures or formatting as precision robustness.
+7. **HF model load fail due to `transformers` changes:** pin a compatible `transformers` 4.x, prefer eager attention and no remote code; rerun tests and update version lock file in evidence. Don't silently switch architecture.
+8. **Unexpected large 'test accuracy':** synthetic data contains emotion lexemes; interpretation limited. Expand real measured, manually annotated heldout data with adjective-controlled paraphrases and random-vector controls.
+9. **Re-running same `--out`:** suite intentionally refuses overwrites to protect provenance. Use a new run ID or archive previous output.
+10. **License/ethical use:** Qwen model license at HF; datasets are synthetic, no third-party/private emotional profiling. Avoid inferring human mental health or machine consciousness.
+
+## I. Next code improvements (after first GPU evidence)
+
+- Add model/tokenizer revision IDs, local safetensors hashes, deterministic seed in manifest.
+- Add resume/recovery after partial run with per-capture transactional files, rather than restarting entire experiment.
+- Add formal random-direction and sign-reversal interventions, logit-based controls, larger scenario dataset and stratified bootstrapping.
+- Add a model-specific architecture parity test comparing HF forward-block output and MIA `capture_hs` on the same tokenized prompt.
+- Benchmark latency/peak CUDA RAM, capture-buffer sizing, and precision throughput on T4 vs 1080 Ti.
+- Build blind-rater protocol with randomized conditions and inter-rater agreement.
+- Add verified direct import bridge to actual Model Mountain v4 modules once source bytes exist locally.
+
+## J. External references (checked against public documentation 2026-10-28)
+
+IBM repository and install: https://github.com/IBM/vLLM-Hook
+IBM configuration/1-based layer semantics/`add_vector`: https://github.com/IBM/vLLM-Hook/blob/main/docs/configs.md
+IBM MIA use cases: https://github.com/IBM/vLLM-Hook/tree/main/docs/use_cases
+NVIDIA GPU CC (current): https://developer.nvidia.com/cuda/gpus
+NVIDIA Pascal legacy CC: https://developer.nvidia.com/cuda/gpus/legacy
+Bitsandbytes NVIDIA NF4 matrix: https://huggingface.co/docs/bitsandbytes/main/en/installation
+Qwen2 1.5B model weights/license: https://huggingface.co/Qwen/Qwen2-1.5B-Instruct
+PyTorch install wheel selector: https://pytorch.org/get-started/locally/
+
+## K. Final one-line agent directive
+
+**Do not redesign the project: run CPU checks, run the real Kaggle T4 FP16/NF4 paired pilot, verify every artifact and provenance field, then separately attempt MIA `capture_hs`/`steer`, finally bridge evidence into the available Model Mountain v4 source without touching its security gates.**
+
+## L. Human-rating and report scripts
+
+```bash
+# After a complete HF run has actual saved generation output:
+python scripts/blind_hf_generations.py --run runs/fp16_full --out runs/fp16_blind
+# Send only blinded_annotations.csv to annotators. Once completed:
+python scripts/analyze_annotations.py --ratings runs/fp16_blind/blinded_annotations.csv \
+  --key runs/fp16_blind/blinding_key_PRIVATE.json --out runs/fp16_blind/rating_summary.json
+# Summarize true captured and held-out metrics; matplotlib optional:
+python scripts/render_report.py --run runs/fp16_full
+```
+
+For a v4-compatible pairwise PCA vector instead of mean difference, add `--vector-method pairwise_pca` to both run commands, output to new directories, and compare only matching methods. Pairwise PCA can overfit on 6 training pairs; it is exploratory.
+
+========================================================================================
+docs/EXPERIMENT_CARD.md
+========================================================================================
+
+# EXPERIMENT CARD
+
+Question: Does 4-bit quantization preserve emotion-related activation directions and steering effects for the same language-model checkpoint?
+
+Primary experiment: Qwen/Qwen2-1.5B-Instruct; Hugging Face decoder hooks; FP16 versus bitsandbytes NF4; four fixed 0-based blocks 5,11,17,23; sample 48 synthetic matched pairs; train on 6 per emotion, select block on 3 per emotion, describe held-out performance on 3 per emotion; steer using 0/3/6 coefficients; compare directional cosine and blind human-rated response behavior. All metrics descriptive.
+
+Optional replication: IBM vLLM-Hook MIA on Kaggle T4, same model, `capture_hs` with 1-based decoder indices and a distinct `steer` worker, 512 MiB capture aperture. MIA backend must be verified to be semantically aligned with HF hooks before cross-backend metrics are interpreted. Direct NF4 quantization under vLLM may need supported prequantized AWQ/GPTQ checkpoint, not a converted NF4 checkpoint.
+
+Data source: synthetic `data/emotion_pairs_v1.jsonl`. Do not call outcomes 'emotional intelligence' or evidence of sentience; the intervention changes numerical internal states and perhaps outputs, nothing more.
+
+Artifacts: per-run manifest, checked .npz layers, normalized vectors, validation selection, test report, generation samples, comparison JSON and blinded annotation sheets. Disclose unsuccessful attempts and missing MIA runs explicitly.
+
+Pre-registered pilot selection: choose the validation-best layer by positive fraction then mean margin, no test-informed tuning. Model weights and dataset must remain the same across precision comparisons; track device/library versions. Secondary evaluation: task quality degradation, run-to-run reproducibility, negative controls, human blind ratings, dose response, latency and memory.
+
+========================================================================================
+docs/DATASET_DATASHEET.md
+========================================================================================
+
+# DATASET DATASHEET — emotion_pairs_v1.jsonl
+
+**Dataset type:** fully synthetic human-authored structured paired prompts (generated deterministically from a short template). **Size:** 48 paired observations = 96 prompts across 12 distinct scenario topics, 4 emotion conditions and 3 disjoint splits. **License:** the suite's own templates; no external personal or private records. **Purpose:** smoke/pilot research on activation contrasts, NOT a benchmark for inferring internal feelings, psychology, or real-world affect.
+
+## Composition
+
+Each row: `id` unique pair; `scenario_id` groups related prompts; `split` (`train`, `validation`, `test`); `emotion` (`joy`, `calm`, `anger`, `anxiety`); `neutral_prompt` and `emotion_prompt` holding a fixed scenario but differing by a short first-person emotion framing; `source=author_created_synthetic_v1`; `annotation_note` guidance (not training label). Scenarios assigned 6 train, 3 validation, 3 test, shared consistently across all four emotions. There are thus 24/12/12 paired rows across splits.
+
+## Known weaknesses
+
+- Directly names affective states in positive prompts, so vectors can reflect lexical words rather than a latent affective function.
+- Synthetic first-person prompts can reflect style instruction/assistant formatting; not necessarily a general emotion mechanism.
+- Only 3 held-out scenarios per emotion; descriptive metrics cannot establish stable generalization.
+- No blinded label annotation or natural conversational examples. The data must not be called benchmark-standard or psychologically validated.
+- Some neutral prompts are repeated across emotions for the same scenario by design; the splitting guarantee is by `scenario_id`, not row. This is appropriate for controlled contrasts but can induce common neutral direction biases.
+
+## Auditing and versioning
+
+Run `python scripts/make_dataset.py` then `python -m mm_emotion.cli validate`. Hash of initial generated v1 content: `3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e`. Any edit changes this hash and invalidates direct comparability. Before publication, create version 2 with longer controlled, non-lexical emotions, human annotation, and leakage-safe unseen scenario groups; keep v1 for reproducibility.
+
+========================================================================================
+docs/STATUS.md
+========================================================================================
+
+# STATUS — 2026-10-28
+
+- [x] Standalone research suite source authored.
+- [x] Synthetic 48-pair emotion dataset with group-disjoint train/validation/test.
+- [x] HF actual decoder-block activation hook backend coded.
+- [x] Normalized contrast, validation layer selection and test metrics coded.
+- [x] FP16 vs NF4 same-model cosine comparison coded.
+- [x] HF causal activation steering and output capture coded.
+- [x] IBM MIA `capture_hs`/`steer` adapters coded from official public API.
+- [x] Research-only Model Mountain evidence bridge and safe overlay installer coded.
+- [x] CPU tests passing and synthetic smoke verified.
+- [ ] HF FP16 actual GPU capture: NOT EXECUTED HERE.
+- [ ] HF NF4 actual GPU capture: NOT EXECUTED HERE.
+- [ ] MIA Kaggle install and hooks: NOT EXECUTED HERE.
+- [ ] Actual precision cosine result: NO DATA.
+- [ ] Causal emotion-tone intervention results: NO REAL GENERATIONS.
+- [ ] Blinded human rating: NOT COMPLETED.
+- [ ] Source-level merge into v4: BLOCKED BY SOURCE ARCHIVE MATERIALIZATION.
+
+========================================================================================
+docs/RELEASE_NOTES.md
+========================================================================================
+
+# Release notes — Model Mountain Emotion Lab v0.1 (2026-10-28)
+
+## Created
+
+- New separate research package for actual decoder-block activations using Transformers forward hooks, CPU-stored float32 tensors and normalized contrast vectors.
+- Independent IBM MIA capture/steer runners conforming to public MIA configuration/API documentation (not GPU-tested).
+- Quantized bitsandbytes NF4 loading path and controlled same-model FP16/NF4 direction comparison.
+- Mean-difference and optional pairwise-PCA vector fitting; validation-selected layers, fixed held-out test protocol.
+- Deterministic synthetic 48 matched-pair dataset (12 scenarios x 4 emotions, split by scenario).
+- Optional causal generation at multiple steering coefficients, randomized blinded human annotation template, rating summaries.
+- Model Mountain research-only evidence export and no-overwrite extension copier.
+- Machine-readable handoff JSON and extensive agent/dataset/experiment cards.
+- Single-upload Kaggle notebook embedding complete source and data.
+- CPU unit tests and synthetic pipeline smoke; notebook CPU execution verified.
+
+## Verification
+
+10 CPU tests passing. Notebook restored project, executed all default cells without errors, validated data, and produced explicitly synthetic smoke evidence in a separate local test location. No GPU available in authoring environment. **No true Qwen model activations, NF4 result, MIA capture or emotion steering result is included or asserted.** Original Model Mountain v4 ZIP cannot be raw-materialized in the authoring environment; this is a companion, not a directly patched v4 release.
+
+========================================================================================
+MACHINE HANDOFF JSON
+========================================================================================
+
+{
+  "schema": "model-mountain.emotion-agent-handoff.v1",
+  "snapshot_date": "2026-10-28",
+  "project": "Model Mountain Emotion Vector Research Suite",
+  "entrypoint_docs": ["AGENTS.md", "docs/AGENT_DATASHEET.md", "README.md"],
+  "primary_model": "Qwen/Qwen2-1.5B-Instruct",
+  "dataset": "data/emotion_pairs_v1.jsonl",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "layers_0based": [5, 11, 17, 23],
+  "capture_semantics": "decoder block output, last prompt token, prefill-only, float32 CPU storage",
+  "methods": ["mean_diff", "pairwise_pca"],
+  "emotions": ["joy", "calm", "anger", "anxiety"],
+  "dataset_splits": {"train_pairs_per_emotion": 6, "validation_pairs_per_emotion": 3, "test_pairs_per_emotion": 3},
+  "hardware": {
+    "gtx1080ti": {"hf_fp16": "possible", "hf_nf4": "possible_with_sm61_wheels", "mia": "unsupported"},
+    "kaggle_t4": {"hf_fp16": "possible", "hf_nf4": "possible", "mia": "hardware_ok_software_unverified"}
+  },
+  "verification": {
+    "cpu_unit_tests": "passed_10",
+    "dataset_validation": "passed_48_pairs",
+    "synthetic_smoke": "passed_but_not_empirical",
+    "real_hf_gpu_capture": "NOT_RUN",
+    "real_hf_nf4_capture": "NOT_RUN",
+    "mia_gpu_capture": "NOT_RUN",
+    "mia_steering": "NOT_RUN",
+    "human_ratings": "NOT_RUN",
+    "model_mountain_v4_code_merged": "NO_SOURCE_MATERIALIZATION_BLOCKER"
+  },
+  "next_action": {
+    "id": "GPU-001",
+    "goal": "Run real HF FP16 Kaggle T4 pilot",
+    "commands": [
+      "python -m pytest -q",
+      "python -m mm_emotion.cli validate",
+      "python -m mm_emotion.cli doctor",
+      "python -m mm_emotion.cli run --backend hf --model Qwen/Qwen2-1.5B-Instruct --precision fp16 --layers 5,11,17,23 --limit-per-split 2 --generate-samples 2 --out runs/fp16_pilot"
+    ],
+    "acceptance": ["real CUDA T4 detected", "manifest complete", "nonempty finite capture arrays", "summary.json present", "no fake empirical claims"],
+    "followup": "Run NF4 with same model and data, compare cosine. Then optional isolated MIA."
+  },
+  "source_model_mountain_v4": {
+    "archive": "/SpartHills/Model_Mountain_v4_Multiagent_Workflow_COMPLETE.zip",
+    "raw_archive_access": "failed: Library did not allow raw-byte materialization",
+    "merge_status": "read_only_companion_not_source_patch",
+    "safe_overlay": "python scripts/install_into_model_mountain.py --root /path/to/v4 --apply"
+  },
+  "security_boundaries": ["Research metrics cannot authorize tools", "No policy gateway override", "No fake MIA results", "No emotional profiling of real individuals"],
+  "reference_apis": {
+    "mia_repo": "https://github.com/IBM/vLLM-Hook",
+    "mia_configs": "https://github.com/IBM/vLLM-Hook/blob/main/docs/configs.md"
+  }
+}

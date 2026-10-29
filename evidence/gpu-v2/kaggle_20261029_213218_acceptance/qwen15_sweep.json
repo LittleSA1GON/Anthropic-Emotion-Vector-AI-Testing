@@ -1,0 +1,203 @@
+{
+  "schema": "mm-emotion.multi-model.v1",
+  "origin": "real_model_inference",
+  "created_utc": "2026-10-29T21:36:00.044233+00:00",
+  "mode": "sweep",
+  "runtime": {
+    "timestamp_utc": "2026-10-29T21:35:45.504299+00:00",
+    "python": "3.13.15",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "git_commit": "unknown",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "gpu_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "gpu_cc": [
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        5
+      ]
+    ],
+    "transformers": "4.57.6"
+  },
+  "models": [
+    {
+      "alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "device": "cuda:0",
+      "decoder_layers": 28,
+      "resolved_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+      "status": "completed",
+      "seconds": 8.685
+    }
+  ],
+  "configuration": {
+    "layer_0based": 5,
+    "max_new_tokens": 32,
+    "temperature": 0.7,
+    "top_p": 1.0,
+    "seed": 42,
+    "seeds": [
+      42,
+      43
+    ],
+    "provisional_thresholds_approved_for_run": false
+  },
+  "results": [
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": 0.0,
+      "output": {
+        "text": "Firstly, create a detailed study plan that includes all the topics and their specific dates for revision. Secondly, practice with past papers and quizzes to improve your understanding",
+        "duration_seconds": 1.1511086760000353,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": -3.0,
+      "output": {
+        "text": "Firstly, create a detailed study plan that includes all topics covered in the exam and allocate sufficient time for each one. Secondly, practice regularly with past papers or",
+        "duration_seconds": 1.1528627700000698,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 42,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": 3.0,
+      "output": {
+        "text": "Firstly, create a detailed study plan that includes all the topics and their specific dates for revision. Secondly, practice regularly with sample papers or past exam questions to",
+        "duration_seconds": 1.148406594999983,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 42
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": 0.0,
+      "output": {
+        "text": "Start by reviewing your study notes and textbooks thoroughly, then create a plan for the exam questions you anticipate might be asked based on previous exams or class discussions. Practice",
+        "duration_seconds": 1.1554406100000278,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": -3.0,
+      "output": {
+        "text": "Start by reviewing your study notes and textbooks thoroughly, then create a plan for the exam questions you anticipate might be asked based on previous exams or class discussions. Practice",
+        "duration_seconds": 1.1491260799999736,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    },
+    {
+      "origin": "real_model_generation",
+      "model_alias": "qwen15",
+      "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+      "precision": "fp32",
+      "id": "heldout-exam",
+      "prompt": "Explain how to approach an upcoming exam in two sentences.",
+      "vector_path": "runs/kaggle_20261029_213218_acceptance/vectors/qwen15_joy.npz",
+      "vector_hash": "14325dc3b1aa297e8c9e8f9521050ee16e47acbb856b9ec32833740da80e098c",
+      "backend": "hf",
+      "seed": 43,
+      "exception": null,
+      "vector_metadata_hash": "86d5153c2674acf362f74bf2dd82d295e3218ba50dc57a8528cfdeb950073dfc",
+      "layer_0based": 5,
+      "coefficient": 3.0,
+      "output": {
+        "text": "Start by reviewing your study notes and textbooks thoroughly, then create a plan for the exam questions you anticipate might be asked and practice answering those questions under timed conditions to",
+        "duration_seconds": 1.1681235089999973,
+        "new_tokens": 32,
+        "input_tokens": 41,
+        "scope": "last_token",
+        "seed": 43
+      }
+    }
+  ],
+  "failures": [],
+  "stats": {
+    "outputs": 6
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "backend": "hf",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "emotion": "calm",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "origin": "real_model_inference",
+  "precision": "nf4",
+  "schema": "mm-emotion.capture.v1",
+  "sha256": "d5667d560fbed7a80f74d36909fb415a7f0521698ad693b65d343bc5445b92e4",
+  "shape": [
+    2,
+    1,
+    896
+  ],
+  "split": "train"
+}

@@ -1,0 +1,5 @@
+emotion,selected_layer_0based,test_n,test_positive_fraction,test_mean_margin,val_positive_fraction
+joy,5,2,1.0,0.5246343858338962,1.0
+calm,5,2,1.0,0.4019354051460797,1.0
+anger,5,2,1.0,0.3778654669229572,1.0
+anxiety,5,2,1.0,0.4031355760579354,1.0

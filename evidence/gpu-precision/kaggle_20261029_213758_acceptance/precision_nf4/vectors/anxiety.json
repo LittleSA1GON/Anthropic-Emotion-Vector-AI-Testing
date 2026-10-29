@@ -1,0 +1,38 @@
+{
+  "backend": "hf",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "emotion": "anxiety",
+  "layer_0based": 5,
+  "layer_selection_on": "validation",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "note": "Exploratory; synthetic dataset, not validated psychology",
+  "origin": "real_model_inference",
+  "precision": "nf4",
+  "test_evaluation_on": "test",
+  "test_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.016562247258632937,
+      "mean_margin": 0.4847586385425651,
+      "median_margin": 0.4847586385425651,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 29.26889273977531
+    }
+  },
+  "trained_on": "train",
+  "validation_layers": {
+    "5": {
+      "layer_position": 0,
+      "margin_std": 0.01024865185924563,
+      "mean_margin": 0.46830940090407613,
+      "median_margin": 0.46830940090407613,
+      "n_pairs": 2,
+      "positive_fraction": 1.0,
+      "standardized_margin": 45.69473208142977
+    }
+  },
+  "vector_l2_norm": 1.0,
+  "vector_method": "mean_diff",
+  "vector_sha256": "dead50f1193a00d08acb65f803e17292e723cd69ce8deb85a20ed66f0b23a822"
+}

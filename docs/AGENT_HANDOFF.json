@@ -1,0 +1,156 @@
+{
+  "schema": "model-mountain.emotion-agent-handoff.v2",
+  "snapshot_date": "2026-10-28",
+  "project": "Model Mountain Emotion Vector Research Suite",
+  "entrypoint_docs": [
+    "AGENTS.md",
+    "docs/WORKBENCH_OPERATOR_GUIDE.md",
+    "docs/AGENT_DATASHEET.md",
+    "README.md"
+  ],
+  "primary_model": "Qwen/Qwen2-1.5B-Instruct",
+  "dataset": "data/emotion_pairs_v1.jsonl",
+  "dataset_sha256": "3f71a11c2c9a6d31f0837089cdb2f3a95305ec84c3501c29bac0a34db8ff235e",
+  "layers_0based": [
+    5,
+    11,
+    17,
+    23
+  ],
+  "capture_semantics": "decoder block output, last prompt token, prefill-only, float32 CPU storage",
+  "methods": [
+    "mean_diff",
+    "pairwise_pca"
+  ],
+  "emotions": [
+    "joy",
+    "calm",
+    "anger",
+    "anxiety"
+  ],
+  "dataset_splits": {
+    "train_pairs_per_emotion": 6,
+    "validation_pairs_per_emotion": 3,
+    "test_pairs_per_emotion": 3
+  },
+  "hardware": {
+    "gtx1080ti": {
+      "hf_fp16": "possible",
+      "hf_nf4": "possible_with_sm61_wheels",
+      "mia": "unsupported"
+    },
+    "kaggle_t4": {
+      "hf_fp16": "possible",
+      "hf_nf4": "possible",
+      "mia": "hardware_ok_software_unverified"
+    }
+  },
+  "verification": {
+    "cpu_unit_tests": "passed_18",
+    "dataset_validation": "passed_48_pairs",
+    "synthetic_smoke": "passed_but_not_empirical",
+    "real_hf_gpu_capture": "NOT_RUN",
+    "real_hf_nf4_capture": "NOT_RUN",
+    "mia_gpu_capture": "NOT_RUN",
+    "mia_steering": "NOT_RUN",
+    "human_ratings": "NOT_RUN",
+    "model_mountain_v4_code_merged": "NO_SOURCE_MATERIALIZATION_BLOCKER",
+    "interactive_workbench_static_compile": "passed",
+    "notebook_cpu_execute_8_code_cells": "passed",
+    "notebook_widget_ui_kaggle": "NOT_RUN_GPU_ENV",
+    "streamlit_manual_in_browser": "NOT_RUN_NO_STREAMLIT_INSTALLED"
+  },
+  "next_action": {
+    "id": "GPU-WORKBENCH-001",
+    "goal": "Verify visual real-model A/B steering with isolated interventions, then FP16 vs NF4",
+    "commands": [
+      "python -m pytest -q",
+      "python -m mm_emotion.cli doctor",
+      "python -m streamlit run app_emotion.py",
+      "or: set OPEN_INTERACTIVE_WORKBENCH=True in Kaggle notebook and run interactive controls cell"
+    ],
+    "acceptance": [
+      "load real Qwen2 1.5B model on CUDA",
+      "import or add two neutral/emotional prompt pairs",
+      "fit a genuine finite vector over selected layers",
+      "record zero-coefficient baseline output with no hook",
+      "show controllable sign/strength/scope changes with hook cleanup",
+      "save timestamped session JSON with model ID, precision, vector hash, settings",
+      "unload FP16 before loading NF4 on 16 GB GPU",
+      "record measured results as REAL_MODEL_GENERATION only when hardware was actually used"
+    ],
+    "followup": "Run full train/validation/test CLI, compare FP16/NF4 and blinded human ratings. Optional IBM MIA compatibility after separate backend verification."
+  },
+  "source_model_mountain_v4": {
+    "archive": "/SpartHills/Model_Mountain_v4_Multiagent_Workflow_COMPLETE.zip",
+    "raw_archive_access": "failed: Library did not allow raw-byte materialization",
+    "merge_status": "read_only_companion_not_source_patch",
+    "safe_overlay": "python scripts/install_into_model_mountain.py --root /path/to/v4 --apply"
+  },
+  "security_boundaries": [
+    "Research metrics cannot authorize tools",
+    "No policy gateway override",
+    "No fake MIA results",
+    "No emotional profiling of real individuals"
+  ],
+  "reference_apis": {
+    "mia_repo": "https://github.com/IBM/vLLM-Hook",
+    "mia_configs": "https://github.com/IBM/vLLM-Hook/blob/main/docs/configs.md"
+  },
+  "version": "0.2-workbench",
+  "new_workbench": {
+    "local_gui": {
+      "entrypoint": "python -m streamlit run app_emotion.py",
+      "dependency_file": "requirements-ui.txt",
+      "model_backend": "mm_emotion/hf_backend.py",
+      "source": "app_emotion.py"
+    },
+    "kaggle_widgets": {
+      "entrypoint": "OPEN_INTERACTIVE_WORKBENCH=True then rerun notebook interactive controls cell",
+      "source": "mm_emotion/notebook_ui.py",
+      "self_contained_notebook": "notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb"
+    },
+    "input_formats": [
+      "CSV columns neutral_prompt,emotion_prompt",
+      "JSONL records",
+      "JSON array or pairs wrapper"
+    ],
+    "input_template": "data/templates/pairs_template.csv",
+    "main_workflow": [
+      "Load model",
+      "Load or create at least two contrast pairs",
+      "Capture chosen 0-based layers and fit vector",
+      "Select saved vector",
+      "Change one intervention setting at a time",
+      "Run zero-coefficient baseline and a steering condition",
+      "Review saved session and export evidence"
+    ],
+    "controls": [
+      "model_id",
+      "precision: fp16/nf4/fp32",
+      "layers_0based",
+      "direction_sign",
+      "coefficient -20 to 20",
+      "scope: last_token/prefill_only/decode_only/all_tokens",
+      "max_new_tokens",
+      "temperature",
+      "top_p",
+      "seed",
+      "sweep_coefficients"
+    ],
+    "datasets_output": "runs/workbench_datasets/",
+    "vectors_output": "runs/workbench_vectors/",
+    "sessions_output": "runs/workbench_sessions/",
+    "strict_provenance": [
+      "refuse wrong model_id",
+      "refuse different precision unless explicitly opted-in same-model transfer",
+      "refuse wrong hidden dimension",
+      "verify run-vector hash when present",
+      "zero coefficient does not install steering hook",
+      "detach all hooks in finally"
+    ],
+    "quick_fit_evaluation_status": "TRAINING_ONLY_NOT_HELD_OUT",
+    "gpu_validation": "NOT_EXECUTED",
+    "full_suite_cli": "python -m mm_emotion.cli run --help"
+  }
+}
