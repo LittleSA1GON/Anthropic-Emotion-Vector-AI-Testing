@@ -15,7 +15,11 @@
     "54 distinct model/precision/case records, all ungraded",
     "18 selected generation records across three models; repeated Qwen replication also retained",
     "FP16/NF4 real direction cosines at block5: joy0.7936 calm0.7704 anger0.7997 anxiety0.8062",
-    "Git attributes preserve exact source/artifact bytes across Windows and Linux checkouts"
+    "Git attributes preserve exact source/artifact bytes across Windows and Linux checkouts",
+    "Kaggle API UI: own-account session token fields, private batch submission and returned-URL tracking",
+    "Real Kaggle UI job: 6 generations with post-intervention activation snapshots at layers5/11 and 18 ungraded course cases",
+    "36 CPU tests pass; 4 Streamlit pages load; measured 3D PCA animation verified",
+    "StyleKit editorial layout applied with responsive controls and visible keyboard focus"
   ],
   "unverified": [
     "GTX 1080 Ti hardware execution",
@@ -24,7 +28,7 @@
     "Original Model Mountain v4 integration",
     "Exact Word DOCX pagination without LibreOffice"
   ],
-  "next_task": "External: instructor threshold/neutral-label approval; optional MIA and original v4 integration",
+  "next_task": "Kaggle UI ready for user experiments; instructor scoring approval, optional MIA/v4 integration remain external.",
   "completed_task_ids": [
     "T00",
     "T01",
@@ -33,7 +37,9 @@
     "T04",
     "T05",
     "T07",
-    "T10"
+    "T10",
+    "T11",
+    "T12"
   ],
   "changed_files": [
     "mm_emotion/artifacts.py",
@@ -66,7 +72,15 @@
     "docs/DEVELOPMENT_BRIEF.md",
     "pytest.ini",
     ".github/workflows/tests.yml",
-    ".gitattributes"
+    ".gitattributes",
+    "mm_emotion/kaggle_runner.py",
+    "mm_emotion/remote_experiment.py",
+    "mm_emotion/activation_view.py",
+    "mm_emotion/ui_theme.py",
+    "pages/3_Kaggle_Experiment_Lab.py",
+    "tests/test_kaggle_runner.py",
+    ".streamlit/config.toml",
+    "docs/KAGGLE_UI.md"
   ],
   "evidence_paths": [
     "evidence/cpu-tests.xml",
@@ -79,7 +93,8 @@
     "evidence/gpu-precision",
     "evidence/ui-check.json",
     "notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb",
-    "dist/Model_Mountain_Emotion_Lab_FULL.zip"
+    "dist/Model_Mountain_Emotion_Lab_FULL.zip",
+    "evidence/kaggle-ui/verification.json"
   ],
   "important": "Do not claim real model experimental outputs until GPU evidence is generated. Update this file after each Work milestone.",
   "kaggle_acceptance": {
@@ -98,7 +113,9 @@
     "T07": "Completed on T4: SmolLM2 135M second-family inference/vector/matrix; matched Qwen0.5 FP16/NF4 captures and comparison, same layer5/data/checkpoint",
     "T08": "Optional IBM MIA remains untested",
     "T09": "Original v4 source absent; standalone extension preserved",
-    "T10": "Real JSON/CSV/vector evidence consolidated, measured report generated, final source ZIP and self-contained notebook assembled"
+    "T10": "Real JSON/CSV/vector evidence consolidated, measured report generated, final source ZIP and self-contained notebook assembled",
+    "T11": "Complete: per-user Kaggle API remote experiments, real prefill measurements, signed controls, UI and downloads verified on T4",
+    "T12": "Complete: StyleKit editorial theme, responsive controls and measured activation animation"
   },
   "blockers": [
     "No local CUDA GPU (Intel Iris Xe only)",
@@ -115,5 +132,11 @@
     "url": "https://www.kaggle.com/code/littlesa1gon/model-mountain-emotion-lab",
     "visibility": "private",
     "saved_without_execution": true
+  },
+  "kaggle_ui": {
+    "status": "completed",
+    "ref": "littlesa1gon/emotion-vector-experiment-261029-223658-e7f4b1",
+    "local_url": "http://127.0.0.1:8501/Kaggle_Experiment_Lab",
+    "source_hash": "13b0fd9ad302af73bd43b18e76c457ca57f06f631a3c9ca0d9f1ef03148676d8"
   }
 }

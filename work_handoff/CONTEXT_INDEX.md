@@ -6,9 +6,11 @@
 | Existing vector discovery and steering | `mm_emotion/workbench.py`, `mm_emotion/hf_backend.py`, `app_emotion.py` |
 | Multi-model direct inference | `mm_emotion/multi_model.py`, `pages/1_Multi_Model_Experiments.py`, `course/model_registry.example.json` |
 | Kaggle multi-model | `mm_emotion/course_notebook_ui.py`, `scripts/build_notebook.py` |
+| Kaggle API UI | `mm_emotion/kaggle_runner.py`, `mm_emotion/remote_experiment.py`, `pages/3_Kaggle_Experiment_Lab.py`, `docs/KAGGLE_UI.md` |
+| Measured activation plots and styling | `mm_emotion/activation_view.py`, `mm_emotion/ui_theme.py`, `.streamlit/config.toml` |
 | 18-case classifier, data | `mm_emotion/course_tests.py`, `course/18_test_cases.csv`, `course/training_pairs.json` |
 | Draw.io test models | `mm_emotion/drawio.py`, `course/drawio/CMPE187_All_Editable_DrawIO.drawio` |
-| Report + evidence | `mm_emotion/course_report.py`, `pages/2_CMPE187_Report_Builder.py`, `course/generated/CMPE187_Deliverable_2_DRAFT.docx` |
+| Report + evidence | `mm_emotion/course_report.py`, `pages/2_CMPE187_Report_Builder.py`, `course/generated/CMPE187_Deliverable_2.docx` |
 | Existing IBM MIA | `mm_emotion/mia_backend.py`, `mm_emotion/mia_steering.py`, `configs/mia_capture_qwen2_1p5b.json` |
 | Model Mountain v4 bridge | `mm_emotion/model_mountain_bridge.py`, `integrations/README.md` |
 | Existing validation | `tests/test_course.py`, `tests/test_multi_model.py`, plus nearest relevant test file |

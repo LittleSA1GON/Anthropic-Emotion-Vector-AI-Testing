@@ -151,11 +151,16 @@ def test_isolated_hook_changes_only_chosen_phase_and_is_removed():
     assert not demo.model.block._forward_hooks
     assert torch.equal(before, demo.model.weight)
 
+    snapshot=demo.generate('same',0,direction,2.0,capture_layer=0)
+    assert snapshot['observed_prefill_activation']==[3.,1.,1.]
+    assert snapshot['activation_origin']=='real_prefill_decoder_block_output_after_intervention'
+    assert not demo.model.block._forward_hooks
+
     # Even a generation exception must leave no intervention installed.
     def fail_generate(**kwargs):
         demo.model.block(torch.ones((1,1,3)))
         raise RuntimeError('generation failed')
     demo.model.generate=fail_generate
     with pytest.raises(RuntimeError,match='generation failed'):
-        demo.generate('same',0,direction,2.0,intervention_scope='prefill_only')
+        demo.generate('same',0,direction,2.0,intervention_scope='prefill_only',capture_layer=0)
     assert not demo.model.block._forward_hooks

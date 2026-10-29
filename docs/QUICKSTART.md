@@ -1,5 +1,7 @@
 # Run your own Emotion Lab
 
+For the local UI that runs experiments through **your own Kaggle API**, start with [Kaggle Experiment Lab](KAGGLE_UI.md). It needs no local GPU or downloaded model weights. The notebook workflow below is also available.
+
 Each researcher runs a separate local app or a private Kaggle notebook with their own credentials and output directory. Access to this GitHub repository does not grant Kaggle GPU quota or access to gated model weights.
 
 ## Kaggle T4

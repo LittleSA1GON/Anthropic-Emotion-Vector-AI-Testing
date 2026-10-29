@@ -1,3 +1,16 @@
+# Kaggle API UI update 2026-10-29
+
+- The local Kaggle Experiment Lab now accepts each user's own Kaggle username and session-only API token, submits private T4 jobs, and downloads their results.
+- Real end-to-end API check passed: Qwen 0.5B FP16, six generations at layers 5/11 with strengths -3/0/+3, plus the 18-case ungraded course matrix.
+- Generation hooks record actual post-intervention prefill activations. The UI provides animated 3D PCA, projection plots, isolation residuals, model outputs, and vector/capture downloads.
+- 36 CPU tests pass, including token-isolation and server-assigned URL handling. All four Streamlit pages load without exceptions.
+- The local UI is running at http://127.0.0.1:8501/Kaggle_Experiment_Lab. New users should follow docs/KAGGLE_UI.md.
+- Styling follows the user-supplied StyleKit guide with an editorial hierarchy, paper/ink palette, keyboard focus, and responsive controls.
+
+Earlier measured pilots and their limitations are retained below.
+
+---
+
 # Current release verification 2026-10-29
 
 - 32 local CPU tests pass, including tensor-hook isolation and cleanup after errors; three Streamlit pages load without exceptions.

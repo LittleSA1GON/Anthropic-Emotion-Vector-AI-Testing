@@ -1,5 +1,7 @@
 # Model Mountain Emotion Lab
 
+**Control Kaggle from the UI:** open the **Kaggle Experiment Lab** page to enter your Kaggle username and API token, submit private T4 experiments, and inspect real activation measurements in animated 3D plots. Each researcher runs jobs on their own account. See [the API UI guide](docs/KAGGLE_UI.md).
+
 Run your own experiments to discover, inspect, and steer emotion-related activation vectors. Includes a local Streamlit workbench, a self-contained Kaggle notebook, sequential multi-model inference, native vector checks, signed coefficient sweeps with zero controls, repeated sampling seeds, blinded annotation export, and the CMPE 187 testing/report pipeline.
 
 **Start with [the quickstart](docs/QUICKSTART.md).** Each researcher supplies their own optional Hugging Face token in the app sidebar or Kaggle Secrets. Kaggle API credentials are only needed for local notebook upload/download. Public Qwen weights need no model token. Internal-vector steering uses downloadable model weights; hosted text API keys alone do not provide activation access.

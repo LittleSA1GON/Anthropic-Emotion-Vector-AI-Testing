@@ -1,0 +1,52 @@
+{
+  "schema": "mm-emotion.kaggle-ui-verification.v1",
+  "kaggle_ref": "littlesa1gon/emotion-vector-experiment-261029-223658-e7f4b1",
+  "status": "completed",
+  "submitted_source_zip_sha256": "13b0fd9ad302af73bd43b18e76c457ca57f06f631a3c9ca0d9f1ef03148676d8",
+  "generations": 6,
+  "course_cases": 18,
+  "real_generation_snapshots": true,
+  "course_thresholds": "ungraded_provisional_thresholds",
+  "isolation_checks": [
+    {
+      "layer_0based": 5,
+      "conditions": [
+        {
+          "coefficient": 0.0,
+          "added_projection": 0.0,
+          "orthogonal_delta_norm": 0.0
+        },
+        {
+          "coefficient": -3.0,
+          "added_projection": -3.000013776703807,
+          "orthogonal_delta_norm": 0.0017684109105354884
+        },
+        {
+          "coefficient": 3.0,
+          "added_projection": 3.0000368818732825,
+          "orthogonal_delta_norm": 0.0018703693683775697
+        }
+      ]
+    },
+    {
+      "layer_0based": 11,
+      "conditions": [
+        {
+          "coefficient": 0.0,
+          "added_projection": 0.0,
+          "orthogonal_delta_norm": 0.0
+        },
+        {
+          "coefficient": -3.0,
+          "added_projection": -2.999602748368215,
+          "orthogonal_delta_norm": 0.0032829218956339314
+        },
+        {
+          "coefficient": 3.0,
+          "added_projection": 2.999463662706794,
+          "orthogonal_delta_norm": 0.003359314538604532
+        }
+      ]
+    }
+  ]
+}

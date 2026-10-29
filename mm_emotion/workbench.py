@@ -68,7 +68,7 @@ def pair_to_jsonl(rows: list[dict]) -> bytes:
 
 
 def make_quick_vector(backend: Any, pairs: list[dict], layers: list[int],
-                      method: str = "mean_diff", *, label: str = "custom") -> tuple[np.ndarray, dict]:
+                      method: str = "mean_diff", *, label: str = "custom", capture_sink: dict | None = None) -> tuple[np.ndarray, dict]:
     """Fit exploratory layer directions on >=2 pairs, recording *training-only* scores."""
     if len(pairs) < 2:
         raise ValueError("At least two independent contrast pairs required")
@@ -80,6 +80,8 @@ def make_quick_vector(backend: Any, pairs: list[dict], layers: list[int],
         positive.append(backend.capture(pair["emotion_prompt"], layers))
         neutral.append(backend.capture(pair["neutral_prompt"], layers))
     pos, neu = np.stack(positive), np.stack(neutral)
+    if capture_sink is not None:
+        capture_sink.update(positive=pos, neutral=neu)
     if method == "mean_diff":
         directions = normalized_difference(pos, neu)
     elif method == "pairwise_pca":

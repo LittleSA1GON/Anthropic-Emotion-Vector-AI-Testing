@@ -193,6 +193,41 @@
         "all deliverables linked",
         "CPU and GPU validation separated"
       ]
+    },
+    {
+      "id": "T11",
+      "priority": 11,
+      "status": "complete_gpu",
+      "objective": "Use each researcher\u2019s Kaggle API account from the UI for private experiments and measured activation visualizations",
+      "entry": [
+        "mm_emotion/kaggle_runner.py",
+        "mm_emotion/remote_experiment.py",
+        "pages/3_Kaggle_Experiment_Lab.py"
+      ],
+      "acceptance": [
+        "session-only API tokens",
+        "private account-specific jobs",
+        "mandatory zero control",
+        "post-intervention model snapshots",
+        "real T4 end-to-end check"
+      ]
+    },
+    {
+      "id": "T12",
+      "priority": 12,
+      "status": "complete",
+      "objective": "Apply the user-supplied StyleKit guide to the experiment UI",
+      "entry": [
+        "mm_emotion/ui_theme.py",
+        ".streamlit/config.toml",
+        "mm_emotion/activation_view.py"
+      ],
+      "acceptance": [
+        "clear experiment/results hierarchy",
+        "responsive controls",
+        "accessible focus and contrast",
+        "readable animation controls"
+      ]
     }
   ]
 }

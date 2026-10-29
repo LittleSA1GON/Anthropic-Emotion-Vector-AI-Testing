@@ -94,7 +94,7 @@ class HFBackend:
                  direction: np.ndarray | None = None, coefficient: float = 0.0,
                  max_new_tokens: int = 48, *, temperature: float = 0.0,
                  top_p: float = 1.0, seed: int = 42,
-                 intervention_scope: str = "last_token") -> dict:
+                 intervention_scope: str = "last_token", capture_layer: int | None = None) -> dict:
         """Intervene in decoder-block output, not in model weights.
 
         last_token: add only to the final token of each model forward pass.
@@ -104,6 +104,8 @@ class HFBackend:
         """
         if layer_id is not None and (layer_id < 0 or layer_id >= len(self.layers)):
             raise ValueError("Invalid 0-based decoder layer")
+        if capture_layer is not None and capture_layer not in range(len(self.layers)):
+            raise ValueError("Invalid capture layer")
         if intervention_scope not in ("last_token", "all_tokens", "prefill_only", "decode_only"):
             raise ValueError("Invalid intervention scope")
         if not np.isfinite(coefficient) or abs(coefficient) > 30:
@@ -138,7 +140,16 @@ class HFBackend:
                     updated[:, -1, :] += coefficient * delta
                 return (updated, *output[1:]) if isinstance(output, tuple) else updated
             handle = self.layers[layer_id].register_forward_hook(modify)
+        observation_handle = None
+        observed = []
         try:
+            if capture_layer is not None:
+                def observe_prefill(_module, _inputs, output):
+                    if not observed:
+                        hidden = output[0] if isinstance(output, tuple) else output
+                        observed.append(hidden[0, -1, :].detach().float().cpu().numpy().copy())
+                # Registered after the intervention: the snapshot is the actual modified output.
+                observation_handle = self.layers[capture_layer].register_forward_hook(observe_prefill)
             inputs = self.inputs(prompt)
             # Reset RNG for identical sampling seeds between baseline and interventions.
             self.torch.manual_seed(int(seed))
@@ -154,11 +165,20 @@ class HFBackend:
                 generated = self.model.generate(**inputs, **kwargs)
             elapsed = time.perf_counter() - tic
             new_ids = generated[0][inputs["input_ids"].shape[-1]:]
-            return {"text": self.tokenizer.decode(new_ids, skip_special_tokens=True),
+            result = {"text": self.tokenizer.decode(new_ids, skip_special_tokens=True),
                     "duration_seconds": elapsed, "new_tokens": int(new_ids.numel()),
                     "input_tokens": int(inputs["input_ids"].shape[-1]),
                     "scope": intervention_scope, "seed": int(seed)}
+            if capture_layer is not None:
+                if not observed or not np.isfinite(observed[0]).all():
+                    raise RuntimeError("Missing or nonfinite generation activation snapshot")
+                result.update(observed_prefill_activation=observed[0].tolist(),
+                              observed_prefill_layer_0based=capture_layer,
+                              activation_origin="real_prefill_decoder_block_output_after_intervention")
+            return result
         finally:
+            if observation_handle is not None:
+                observation_handle.remove()
             if handle is not None:
                 handle.remove()
 

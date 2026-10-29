@@ -33,6 +33,7 @@ st.set_page_config(page_title="Model Mountain | Vector Workbench", page_icon="�
 from mm_emotion.credentials import credential_panel
 hf_token = credential_panel()
 st.title("Model Mountain · Emotion Vector Workbench")
+st.page_link('pages/3_Kaggle_Experiment_Lab.py',label='Run experiments using your Kaggle API and GPU account',icon='☁️')
 st.caption("Interactive real-model activation research · no synthetic outputs · research-only vectors, never security authorization")
 st.info("Use the sidebar pages for **Multi-model experiments** and **CMPE 187 report builder**. This home page focuses on vector capture, isolation and steering.")
 
