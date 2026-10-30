@@ -1,0 +1,35 @@
+{
+  "schema": "mm-emotion.research-pilot-validation.v1",
+  "paper": {
+    "title": "Emotion Concepts and their Function in a Large Language Model",
+    "url": "https://arxiv.org/html/2604.07729v1",
+    "sections": [
+      "1.1",
+      "1.2",
+      "2.2"
+    ]
+  },
+  "csv": "data/templates/anthropic_emotion_pilot.csv",
+  "csv_sha256": "e952ee21d31e2e07f2d0b5e0ba0fed7f9e1dac24e49f0776852c63d454db953b",
+  "training_pairs": 12,
+  "test_rows": 8,
+  "emotion_labels": [
+    "happy",
+    "calm",
+    "desperate"
+  ],
+  "neutral_identical_control": true,
+  "speaker_conflict_expected_label": "blank intentionally",
+  "prompt_origin": "original synthetic stories; not copied paper examples",
+  "schema_validation": "passed",
+  "ui_preset_checks": {
+    "research": "12 train / 8 tests",
+    "course": "12 train / original 18 tests",
+    "exceptions": 0
+  },
+  "saved_kaggle_authentication": "verified; no new jobs submitted",
+  "full_cpu_tests_passed": 42,
+  "paper_replication": false,
+  "new_model_inference_results": false,
+  "method_difference": "Final-prefill-token matched-neutral contrasts; no paper-style token pooling or neutral-PC removal"
+}

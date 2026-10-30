@@ -281,6 +281,24 @@
         "focused and full CPU tests pass",
         "notebook source verified"
       ]
+    },
+    {
+      "id": "T16",
+      "priority": 16,
+      "status": "complete_cpu_ui",
+      "objective": "Provide access to the running lab and an Anthropic-inspired example CSV",
+      "entry": [
+        "docs/ANTHROPIC_PILOT.md",
+        "data/templates/anthropic_emotion_pilot.csv",
+        "mm_emotion/integrated_ui.py"
+      ],
+      "acceptance": [
+        "CSV passes existing validation",
+        "training and testing scenarios separate",
+        "paper source and adaptation differences disclosed",
+        "built-in research and original course presets work",
+        "Kaggle credential checked without submitting a run"
+      ]
     }
   ]
 }

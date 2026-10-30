@@ -17,7 +17,7 @@ Model loading and GPU execution happen in your Kaggle account. The local client 
 ## Setup
 
 1. Paste a Hugging Face checkpoint link, such as `https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct`, and choose **Check and add model**. Add up to three checkpoints. The preflight checks the architecture and records the revision; the actual Kaggle run verifies weight loading and decoder hooks. Unsupported architectures report an error rather than returning simulated results.
-2. Upload a single CSV or use **Download CSV format**. The example contains twelve training pairs and the original eighteen course cases.
+2. Choose **Anthropic research pilot** for twelve training pairs and eight test/control prompts, or **CMPE 187 course matrix** for the original eighteen course cases. Run the selected example directly, save it with **Download example CSV**, or upload a single CSV to replace it. See [the research pilot guide](ANTHROPIC_PILOT.md).
 3. Enter your Kaggle username and API token. A blank token uses an existing local Kaggle CLI login. Tokens remain in the UI session and subprocess environment, outside notebooks, requests, output files, and Git.
 4. Click **Run experiment**. Settings such as layer, seed, decoding temperature, and isolation examples are under **Experiment settings**.
 

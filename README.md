@@ -7,11 +7,11 @@ Install Python 3.11 or newer, then **double-click `run.bat` on Windows**. On mac
 The launcher creates the project environment, installs the lightweight UI dependencies, and opens [the lab](http://127.0.0.1:8501). Later launches reuse that environment.
 
 1. Paste a Hugging Face model link and choose **Check and add model**.
-2. Upload one CSV containing training and test rows, or download the supplied CSV format.
+2. Choose the Anthropic-inspired research pilot or course matrix, or upload your own train/test CSV. Download the selected example to edit it.
 3. Enter your Kaggle username and API token, then choose **Run experiment**.
 4. Open **Results & steering** for neutral-subtraction playback, color-coded emotion gauges, generated text, and reusable-vector inference controls.
 
-The example CSV includes twelve training pairs and the original eighteen course cases. Each account runs its own private Kaggle GPU jobs. See [the integrated UI guide](docs/KAGGLE_UI.md).
+The research pilot includes twelve training pairs and eight test/control prompts for happy, calm and desperate; see [the pilot guide](docs/ANTHROPIC_PILOT.md). The course example retains the original eighteen cases. Each account runs its own private Kaggle GPU jobs. See [the integrated UI guide](docs/KAGGLE_UI.md).
 
 Run your own experiments to discover, inspect, and steer emotion-related activation vectors. Includes a local Streamlit workbench, a self-contained Kaggle notebook, sequential multi-model inference, native vector checks, signed coefficient sweeps with zero controls, repeated sampling seeds, blinded annotation export, and the CMPE 187 testing/report pipeline.
 

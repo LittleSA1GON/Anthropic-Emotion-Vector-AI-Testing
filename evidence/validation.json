@@ -210,5 +210,6 @@
       "mutable model preflight revisions"
     ],
     "preserved": "existing UI refinements"
-  }
+  },
+  "research_pilot": "evidence/anthropic-pilot.json"
 }

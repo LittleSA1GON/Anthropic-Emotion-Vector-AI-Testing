@@ -50,14 +50,22 @@ def _setup():
             st.session_state['lab_models']=[m for m in models if m['alias']!=model['alias']];st.rerun()
         if model.get('gated'):st.caption('This checkpoint requires model access and an attached Kaggle HF_TOKEN secret.')
     st.subheader('2. Upload the test CSV')
+    example=st.selectbox('Built-in example',['Anthropic research pilot','CMPE 187 course matrix'],key='lab_example')
+    if example=='Anthropic research pilot':
+        example_bytes=(ROOT/'data/templates/anthropic_emotion_pilot.csv').read_bytes()
+        example_filename='anthropic_emotion_pilot.csv'
+        st.caption('Original story prompts inspired by [Anthropic’s emotion-concepts paper](https://arxiv.org/html/2604.07729v1): happy, calm and desperate. This is a small adaptation using the lab’s last-token contrasts, not a replication of its token-averaged and denoised method.')
+    else:
+        example_bytes=csv_template();example_filename='emotion_experiment_template.csv'
     a,b=st.columns([3,1])
     upload=a.file_uploader('One CSV for training pairs and test prompts',type=['csv'])
-    b.download_button('Download CSV format',csv_template(),'emotion_experiment_template.csv','text/csv')
+    b.download_button('Download example CSV',example_bytes,example_filename,'text/csv')
     st.caption('train rows learn one vector per emotion; test rows compare new prompts with matched neutral references.')
     dataset=None
     try:
-        dataset=parse_experiment_csv(upload.getvalue() if upload else csv_template())
-        if not upload:st.caption('Using the example CSV: 12 training pairs and the original 18 test cases. Upload your file to replace it.')
+        dataset=parse_experiment_csv(upload.getvalue() if upload else example_bytes)
+        if not upload:st.caption('Using '+example+'. Run it directly, or upload your own CSV to replace it.')
+        else:st.caption('Using your uploaded CSV. The built-in example is available to download separately.')
         st.write(f"{len(dataset['training'])} training pairs · {len(dataset['tests'])} tests · "+', '.join(dataset['emotions']))
         with st.expander('Preview CSV'):
             st.dataframe(pd.DataFrame(dataset['rows'])[['row_type','case_id','emotion','prompt','neutral_prompt']],hide_index=True,width='stretch')
