@@ -1,0 +1,57 @@
+{
+  "schema": "mm-emotion.visual-client-validation.v1",
+  "date": "2026-10-30",
+  "cpu_tests_passed": 48,
+  "focused_tests_passed": 16,
+  "ui_entrypoints": 5,
+  "ui_exceptions": 0,
+  "recorded_data_ui_checks": [
+    "new real T4 data and legacy recordings load",
+    "scene layer selection updates native inspector and scores",
+    "other-layer generation snapshots excluded",
+    "demo disables setup GPU submission"
+  ],
+  "browser_checks": [
+    "custom component renders in the dark UI",
+    "demo is explicitly labeled synthetic",
+    "Reduce motion toggles",
+    "2D fallback selectable",
+    "block 6 selection synchronizes scene and alignment heading"
+  ],
+  "build_checks": [
+    "Python compileall",
+    "JavaScript syntax check",
+    "Blender source reopened: 48 nodes sharing one mesh; 121 frames",
+    "GLB validated: 58 nodes, 7 meshes, 54 animations"
+  ],
+  "assets": {
+    "index.html": {
+      "bytes": 11881,
+      "sha256": "c21bf18798ec31b9694f3431f9530878ee5c47650f102f7d19786ed0b2d74a3a"
+    },
+    "neural-preview.png": {
+      "bytes": 588829,
+      "sha256": "101eaa021a606346583aef9a3df890fb5d47f3b486ec60196b189eda6376cf3c"
+    },
+    "neural_lab.blend": {
+      "bytes": 129508,
+      "sha256": "0e37bc39cc2762788aea435a355127ffb4f4adf325172481e59b9af9c4048cba"
+    },
+    "neural_lab.glb": {
+      "bytes": 149944,
+      "sha256": "287ce5ef9ee9d57d92f9b338b7c08fc741d1e6cc5b7889e94270d3c5146f853e"
+    },
+    "neural_scene.json": {
+      "bytes": 10960,
+      "sha256": "add84d9fb8da43841e63da7035639cf500fafec6fa18b21a9f49572a8acabfa1"
+    }
+  },
+  "real_acceptance": "evidence/visual-lifecycle/verification.json",
+  "new_generations": 2,
+  "ui_data_boundary": "Scene geometry is illustrative. Numeric weights, architecture, means, projections and hook comparisons use recorded model data.",
+  "live_telemetry_limit": "Kaggle provider status is live; detailed runtime events are replayed after output publication.",
+  "canvas_unavailable_fallback": "Implemented with Blender PNG; Canvas 2D and explicit flat projection verified in browser; forced getContext-null not tested.",
+  "notebook_restored_tests_passed": 48,
+  "ui_error_recording": "Scene and diagnostics remain available; no fabricated model measurements",
+  "ui_default_layer_warning": "Resolved with session-state selection and no conflicting widget default"
+}

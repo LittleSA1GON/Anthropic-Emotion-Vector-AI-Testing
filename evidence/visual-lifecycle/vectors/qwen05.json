@@ -1,0 +1,21 @@
+{
+  "schema": "mm-emotion.multi-emotion-vector.v2",
+  "origin": "real_model_inference",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "precision": "fp16",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "emotions": [
+    "happy",
+    "calm",
+    "desperate"
+  ],
+  "layers_0based": [
+    6,
+    12,
+    18
+  ],
+  "selected_layer": 12,
+  "training_sha256": "fd92464b9af27355805e5cc87c85025964e486b9b77498383d4fef13f4de78db",
+  "vector_sha256": "abaa828506c33462bda1d9675cd8f4c8fa59c96874e1ef665eca117ae4f61238",
+  "evaluation": "training_only_vectors; separate CSV test prompts"
+}

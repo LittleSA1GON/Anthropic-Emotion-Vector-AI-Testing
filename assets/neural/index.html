@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{color-scheme:dark;font:14px 'Segoe UI',system-ui,sans-serif;color:#e7edf4;background:#0b111d}
+*{box-sizing:border-box}body{margin:0}section{border:1px solid #293749;border-radius:5px;overflow:hidden;background:#0b111d}
+header{display:flex;justify-content:space-between;gap:16px;padding:16px 20px 0}h2{font-size:17px;line-height:1.3;margin:4px 0 0;font-weight:500}p{margin:5px 0;color:#a6b6c8;font-size:12px;line-height:1.5}
+.mode{font:11px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#82c9e6}.mode.demo{color:#edbb73}
+canvas{display:block;width:100%;height:300px;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}
+footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:4px 20px 14px;flex-wrap:wrap}
+nav{display:flex;gap:7px}button{font:inherit;font-size:12px;color:#dbe7f1;background:#142132;border:1px solid #35475d;border-radius:3px;padding:7px 11px;cursor:pointer}
+button:hover{background:#20344a}button:focus-visible,select:focus-visible{outline:2px solid #7dd4c0;outline-offset:2px}
+select{font:inherit;font-size:12px;background:#142132;color:#dbe7f1;border:1px solid #35475d;padding:6px;border-radius:3px}
+.key{display:flex;gap:13px;font-size:11px;color:#9fb2c7}.key span:before{content:'';display:inline-block;width:6px;height:6px;border-radius:100%;background:var(--c);margin-right:5px}
+#fallback{display:none;padding:12px 20px;color:#a6b6c8}#fallback img{width:100%;max-height:270px;object-fit:contain}
+.sr{position:absolute;left:-10000px}.summary{border-top:1px solid #253346;padding:9px 20px;margin:0;font-size:11px}
+@media(max-width:600px){header{padding:12px 13px 0}.key{flex-wrap:wrap}footer{padding:6px 13px 12px}canvas{height:270px}}
+</style></head><body><section aria-label="Experiment visualization">
+<header><div><div id="mode" class="mode">No runtime connected</div><h2 id="title">Waiting for an experiment</h2><p id="detail"></p></div><div><select id="projection" aria-label="Scene projection"><option value="perspective">3D perspective</option><option value="flat">2D fallback</option></select></div></header>
+<canvas id="scene" tabindex="0" aria-label="Blender-authored schematic network. Drag to rotate. Select a captured layer using the layer buttons below."></canvas>
+<div id="fallback"><img loading="lazy" src="neural-preview.png" alt="Blender-authored illustrative neural network"><p>Canvas unavailable. Native scientific tables and charts remain available below.</p></div>
+<footer><nav aria-label="Animation controls"><button id="play">Pause motion</button><button id="restart">Replay</button><button id="camera">Reset camera</button><button id="motion" aria-pressed="false">Reduce motion</button></nav><div class="key"><span style="--c:#79c9ed">Neutral</span><span style="--c:#e8b56b">Emotional</span><span style="--c:#77d5ba">Direction / addition</span></div></footer>
+<p class="summary" id="summary">Illustrative geometry only. No synthetic measurements.</p>
+<nav id="layers" style="padding:0 20px 13px;flex-wrap:wrap" aria-label="Select a captured layer"></nav>
+<p class="sr" id="accessible" aria-live="polite"></p>
+</section><script>
+// Streamlit custom-component protocol: no CDN, framework, WebGL, or model weights.
+const send=(type,data={})=>window.parent.postMessage({isStreamlitMessage:true,type,...data},'*');
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);let state={},asset={},selected=null,inspectable=[],paused=false,visible=true,flat=false,yaw=-.12,pitch=.28,drag=null,t0=performance.now(),lastDraw=0,request=0;
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');let reduced=reduce.matches,manualReduced=false,frozenTime=0;
+const waiting=new Set(['idle','gpu_requested','gpu_queued','gpu_unavailable','disconnected','error']);
+const escapeText=(id,value)=>$(id).textContent=String(value??'');
+function update(payload){
+ state=payload.snapshot||{};asset=payload.asset||{};selected=payload.selected_layer??null;inspectable=payload.inspectable_layers||[];
+ const mode=state.mode||'live';$('mode').className='mode'+(mode==='demo'?' demo':'');
+ escapeText('mode',mode==='demo'?'DEMONSTRATION · synthetic, no GPU':mode==='recorded'?'RECORDED · not a live session':'LIVE STATUS · backend signals only');
+ escapeText('title',(state.state||'idle').replaceAll('_',' '));escapeText('detail',state.message);
+ const architecture=state.architecture;let caption='Blender-authored representative geometry; no measured neuron or parameter mapping.';
+ if(architecture?.layers)caption+=' '+architecture.layers+(mode==='demo'?' illustrative blocks; ':' loaded transformer blocks; ')+(architecture.hidden_dim??'unknown')+' hidden dimensions.';
+ else caption+=' Total model layer count has not been recorded.';
+ if(selected!==null)caption+=' Inspecting captured block '+selected+'.';
+ escapeText('summary',caption);escapeText('accessible',`${state.state}. ${state.message}. ${caption}`);
+ $('layers').replaceChildren();for(const layer of inspectable){const b=document.createElement('button');b.textContent='Block '+layer;b.setAttribute('aria-pressed',String(layer===selected));if(layer===selected)b.style.borderColor='#77d5ba';b.onclick=()=>send('streamlit:setComponentValue',{value:{layer,nonce:Date.now()},dataType:'json'});$('layers').append(b)}
+ if(!ctx){canvas.hidden=true;$('fallback').style.display='block'}
+ resize();draw(performance.now());send('streamlit:setFrameHeight',{height:document.body.scrollHeight+4});schedule();
+ window.dispatchEvent(new CustomEvent('emotion-lab:state',{detail:state}));
+}
+window.addEventListener('message',event=>{if(event.source===window.parent&&event.data?.type==='streamlit:render')update(event.data.args||{})});
+function resize(){const d=Math.min(window.devicePixelRatio||1,1.5);canvas.width=Math.round(canvas.clientWidth*d);canvas.height=Math.round(canvas.clientHeight*d);if(ctx)ctx.setTransform(d,0,0,d,0,0)}
+function project(p){let [x,y,z]=p;const c=Math.cos(yaw),s=Math.sin(yaw);[x,z]=[x*c+z*s,z*c-x*s];const a=Math.cos(pitch),b=Math.sin(pitch);[y,z]=[y*a-z*b,y*b+z*a];const factor=flat?1:7/(7+z);return [canvas.clientWidth*.5+x*canvas.clientWidth*.105*factor,canvas.clientHeight*.46-y*canvas.clientHeight*.22*factor,factor]}
+function line(a,b,color,width=1){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
+function dot(p,r,color){ctx.beginPath();ctx.fillStyle=color;ctx.arc(p[0],p[1],r,0,Math.PI*2);ctx.fill()}
+function draw(now){if(!ctx)return;const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0b111d';ctx.fillRect(0,0,w,h);
+ const active=!waiting.has(state.state),time=paused||reduced?frozenTime:(now-t0)/1000;
+ if(!paused&&!reduced)frozenTime=time;
+ const count=state.architecture?.layers||asset.illustrative_layers||6;
+ const shown=Array.from(new Set(Array.from({length:Math.min(count,24)},(_,i)=>Math.round(i*(count-1)/Math.max(1,Math.min(count,24)-1))).concat(selected===null?[]:[selected]))).sort((a,b)=>a-b);
+ const template=(asset.nodes||[]).filter(n=>n.layer===0);const slots=template.length?template:Array.from({length:8},(_,i)=>({position:[Math.cos(i*Math.PI/4),Math.sin(i*Math.PI/4),0]}));const positions=[];
+ for(const layer of shown){let row=[];for(let j=0;j<slots.length;j++){const p=slots[j].position;const wave=Math.sin(time*.6+j*.7+layer*.1)*.025;row.push(project([(layer/Math.max(count-1,1)-.5)*6,p[1]*(flat?.65:.9)+wave,p[0]*.7]));}positions.push(row)}
+ for(let l=0;l<positions.length-1;l++)for(let j=0;j<slots.length;j++){line(positions[l][j],positions[l+1][j],active?'#28485f':'#1d2d42',.8);if(j%2===0)line(positions[l][j],positions[l+1][(j+1)%slots.length],active?'#20394e':'#182538',.6)}
+ for(let l=0;l<positions.length;l++)for(let j=0;j<slots.length;j++){const p=positions[l][j],isSelected=shown[l]===selected;dot(p,(isSelected?3.7:active?2.9:2.3)*p[2],isSelected?'#77d5ba':active?(j%2?'#a49fda':'#79c9ed'):(j%2?'#655e88':'#3c6985'));}
+ ctx.font='11px Segoe UI';ctx.textAlign='center';for(let l=0;l<shown.length;l++)if(l===0||l===shown.length-1||shown[l]===selected){const p=project([(shown[l]/Math.max(count-1,1)-.5)*6,-1.15,0]);ctx.fillStyle='#9baec2';ctx.fillText('L'+shown[l],p[0],p[1])}
+ // Representative flow follows the real stage; speed never encodes GPU progress.
+ if(!paused&&!reduced)for(let i=0;i<(active?8:3);i++){const q=(time*(active?.23:.065)+i*.137)%1;const p=project([(q-.5)*6,Math.sin(i*1.9)*.58,Math.cos(i*.8)*.5]);dot(p,active?2.5:1.5,active?(i%2?'#e8b56b':'#79c9ed'):'#49677e')}
+ if(['activation_averaging','vector_subtraction','emotion_steering','comparison'].includes(state.state)){
+   const y=h-43,left=w*.25,right=w*.75,center=w*.5;ctx.fillStyle='#79c9ed';ctx.fillText('neutral mean',left,y);ctx.fillStyle='#e8b56b';ctx.fillText('emotion mean',right,y);line([left+45,y-4],[center-18,y-4],'#526b83');line([right-45,y-4],[center+18,y-4],'#526b83');ctx.fillStyle='#77d5ba';ctx.fillText(state.state==='emotion_steering'?'+ αd̂':'E − N → d̂',center,y-3);
+   const values=state.extraction?.dimensions;if(values?.length){const value=values[Math.floor(time*.65)%values.length];ctx.font='11px monospace';ctx.fillStyle='#79c9ed';ctx.fillText(value.neutral_mean.toPrecision(4),left,y+17);ctx.fillStyle='#e8b56b';ctx.fillText(value.emotion_mean.toPrecision(4),right,y+17);ctx.fillStyle='#77d5ba';ctx.fillText('Δ['+value.index+'] = '+value.difference.toPrecision(4),center,y+30)}
+ }
+ if(shown.length<count){ctx.textAlign='left';ctx.fillStyle='#91a5bb';ctx.fillText(shown.length+' sampled layer structures / '+count+' total',16,20)}
+}
+function schedule(){cancelAnimationFrame(request);if(!paused&&!reduced&&visible&&!document.hidden)request=requestAnimationFrame(tick)}
+function tick(now){if(now-lastDraw>40){draw(now);lastDraw=now}if(!paused&&!reduced&&visible&&!document.hidden)request=requestAnimationFrame(tick)}
+$('play').onclick=()=>{paused=!paused;if(!paused)t0=performance.now()-frozenTime*1000;$('play').textContent=paused?'Resume motion':'Pause motion';draw(performance.now());schedule()};
+$('restart').onclick=()=>{frozenTime=0;t0=performance.now();draw(t0);schedule()};$('camera').onclick=()=>{yaw=-.12;pitch=.28;draw(performance.now())};
+$('motion').onclick=()=>{manualReduced=!manualReduced;reduced=manualReduced||reduce.matches;$('motion').textContent=reduced?'Motion reduced':'Reduce motion';$('motion').setAttribute('aria-pressed',String(reduced));draw(performance.now());schedule()};
+$('projection').onchange=e=>{flat=e.target.value==='flat';draw(performance.now())};
+canvas.onpointerdown=e=>{drag=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId)};canvas.onpointermove=e=>{if(drag){yaw+=(e.clientX-drag[0])*.007;pitch=Math.max(-.9,Math.min(.9,pitch+(e.clientY-drag[1])*.006));drag=[e.clientX,e.clientY];draw(performance.now())}};canvas.onpointerup=()=>drag=null;
+canvas.onkeydown=e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();yaw+=(e.key==='ArrowRight'?.1:e.key==='ArrowLeft'?-.1:0);pitch+=(e.key==='ArrowUp'?.1:e.key==='ArrowDown'?-.1:0);draw(performance.now())}};
+reduce.addEventListener('change',e=>{reduced=manualReduced||e.matches;$('motion').setAttribute('aria-pressed',String(reduced));draw(performance.now());schedule()});
+new ResizeObserver(()=>{resize();draw(performance.now());send('streamlit:setFrameHeight',{height:document.body.scrollHeight+4})}).observe(document.body);
+new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule()}).observe(canvas);
+document.addEventListener('visibilitychange',schedule);window.addEventListener('pagehide',()=>cancelAnimationFrame(request));
+send('streamlit:componentReady',{apiVersion:1});
+</script></body></html>

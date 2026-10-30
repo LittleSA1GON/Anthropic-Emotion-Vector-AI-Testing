@@ -1,5 +1,7 @@
 # Model Mountain Emotion Lab
 
+The [dynamic research workspace](docs/DYNAMIC_VISUALIZATION.md) adds evidence-backed compute states, a Blender-authored neural scene, synchronized layer inspection, real parameter samples, exact vector subtraction, and recorded steering comparisons. The UI distinguishes provider status, recorded data, and demonstration content. Both the scene and default PCA replay work without WebGL.
+
 ## Run the lab
 
 Install Python 3.11 or newer, then **double-click `run.bat` on Windows**. On macOS/Linux, run `bash run.sh`.

@@ -24,8 +24,9 @@ def score_emotions(delta,directions,labels):
 
 
 def execute_integrated(config,output,*,backend_factory=None):
-    from .vectors import normalized_difference,layer_metrics
+    from .vectors import normalized_difference
     from .artifacts import runtime_metadata
+    from .lifecycle import EventJournal,confirm_cuda
     config=validate_integrated_request(config)
     rows=config['csv_rows'];train=[r for r in rows if r['row_type']=='train']
     tests=[r for r in rows if r['row_type']=='test']
@@ -38,24 +39,37 @@ def execute_integrated(config,output,*,backend_factory=None):
             'status':'running','configuration':config,'created_utc':datetime.now(timezone.utc).isoformat(),
             'runtime':runtime_metadata(),'emotions':labels,'emotion_colors':colors,
             'models':[],'results':[],'classifications':[],'failures':[],'course_results':[]}
+    journal=EventJournal(root/'events.jsonl',mode='test' if backend_factory is not None else 'live')
+    result['lifecycle_events']=journal.events
     def persist():path.write_text(json.dumps(result,indent=2,ensure_ascii=False,allow_nan=False),encoding='utf8')
+    def emit(state,message,**details):
+        journal.emit(state,message,**details);persist()
     persist()
     training_hash=hashlib.sha256(json.dumps(train,sort_keys=True).encode()).hexdigest()
     try:
         if backend_factory is None:
             import torch
-            if not torch.cuda.is_available():raise RuntimeError('Kaggle CUDA GPU unavailable')
+            gpu=confirm_cuda(torch)
+            if not gpu['cuda_verified']:
+                emit('gpu_unavailable',gpu['reason'],**gpu)
+                raise RuntimeError('Kaggle CUDA GPU unavailable: '+gpu['reason'])
+            emit('gpu_ready','Runtime verified a usable CUDA device',**gpu)
             from .hf_backend import HFBackend
             backend_factory=HFBackend
+        else:emit('gpu_requested','Test backend: no real GPU detection or inference is claimed')
         for model in config['models']:
             backend=None;started=time.perf_counter();context={'stage':'load_model'}
             try:
+                if journal.mode=='live':torch.cuda.reset_peak_memory_stats()
+                emit('model_loading','Loading selected checkpoint',model_alias=model['alias'],model_id=model['model_id'],precision=model['precision'])
                 kwargs={'precision':model['precision'],'max_length':512}
                 if model.get('revision'):kwargs['revision']=model['revision']
                 backend=backend_factory(model['model_id'],**kwargs)
                 layer=config['layer'] if config['layer'] is not None else len(backend.layers)//2
                 if layer not in range(len(backend.layers)):raise ValueError(f'Model has {len(backend.layers)} layers; requested {layer}')
                 revision=getattr(backend.model.config,'_commit_hash',None) or model.get('revision')
+                architecture=backend.describe() if hasattr(backend,'describe') else None
+                weight_summary={'available':False,'reason':'Backend did not expose weight inspection','tensors':[]}
                 reuse=config['reuse_vectors'].get(model['alias'])
                 context={'stage':'learn_vectors','layer_0based':layer}
                 if reuse:
@@ -70,11 +84,19 @@ def execute_integrated(config,output,*,backend_factory=None):
                     if layer not in layers:raise ValueError('Steering must use the layer where these vectors were learned')
                 else:
                     layers=sorted(set([max(0,len(backend.layers)//4),layer,min(len(backend.layers)-1,3*len(backend.layers)//4)]))
+                    emit('activation_capture','Capturing emotional and matched-neutral training prompts',model_alias=model['alias'],layers=layers,pairs=len(train))
                     positive=np.stack([backend.capture(r['prompt'],layers) for r in train])
                     neutral=np.stack([backend.capture(r['neutral_prompt'],layers) for r in train])
                     train_labels=[r['emotion'] for r in train]
+                    emit('activation_averaging','Training captures available; aggregating matched pairs per emotion',model_alias=model['alias'],shape=list(positive.shape),pooling='last prefill token',pairs=len(train))
                     directions=np.stack([normalized_difference(positive[np.array(train_labels)==label],neutral[np.array(train_labels)==label]) for label in labels])
                 if not np.isfinite(directions).all() or np.any(np.linalg.norm(directions,axis=-1)<1e-8):raise ValueError('A learned emotion direction is zero or nonfinite')
+                emit('vector_subtraction','Native unit directions ready'+(' (reused bundle)' if reuse else ''),
+                     model_alias=model['alias'],shape=list(directions.shape),normalization='L2-normalized matched difference of means',reused=bool(reuse))
+                if hasattr(backend,'inspect_weights'):
+                    emit('weights_inspection','Inspecting bounded parameter samples; weights are separate from activations',model_alias=model['alias'],layers=layers)
+                    try:weight_summary=backend.inspect_weights(layers)
+                    except Exception as exc:weight_summary={'available':False,'reason':repr(exc),'tensors':[]}
                 position=layers.index(layer);native=directions[:,position,:]
                 (root/'vectors').mkdir(exist_ok=True);vector=root/'vectors'/(model['alias']+'.npz')
                 np.savez_compressed(vector,directions=directions,layers=np.asarray(layers),emotions=np.asarray(labels),
@@ -88,6 +110,7 @@ def execute_integrated(config,output,*,backend_factory=None):
                 raw=[];references=[];case_ids=[]
                 for case_index,case in enumerate(tests):
                     context={'stage':'neutral_subtraction','case_id':case['case_id'],'prompt':case['prompt'],'layer_0based':layer}
+                    emit('activation_capture','Capturing test input and matched neutral',model_alias=model['alias'],case_id=case['case_id'],layers=layers)
                     activation=backend.capture(case['prompt'],layers);reference=backend.capture(case['neutral_prompt'],layers)
                     raw.append(activation);references.append(reference);case_ids.append(case['case_id'])
                     classification=score_emotions(activation[position]-reference[position],native,labels)
@@ -104,6 +127,8 @@ def execute_integrated(config,output,*,backend_factory=None):
                         coefficient=0. if condition=='baseline' else 1.
                         context={'stage':'generate','case_id':case['case_id'],'prompt':case['prompt'],'layer_0based':layer,
                                  'condition':condition,'steering_weights':weights,'seed':config['seed']}
+                        emit('emotion_steering' if coefficient else 'comparison','Generating '+condition,
+                             model_alias=model['alias'],case_id=case['case_id'],layer=layer,weights=weights,seed=config['seed'])
                         generated=backend.generate(case['prompt'],layer,direction,coefficient,max_new_tokens=config['max_new_tokens'],
                             temperature=config['temperature'],seed=config['seed'],capture_layer=layer)
                         measured=np.asarray(generated['observed_prefill_activation'])
@@ -114,6 +139,7 @@ def execute_integrated(config,output,*,backend_factory=None):
                             'coefficient':coefficient,'vector_path':vector.relative_to(root).as_posix(),'vector_sha256':vector_hash,
                             'emotion_scores':matched['scores'],'closest_emotion':matched['closest_emotion'],'exception':None,**generated})
                         if any(block._forward_hooks for block in backend.layers):raise RuntimeError('A steering hook was not removed')
+                        emit('comparison','Generation and actual post-hook prefill snapshot recorded',model_alias=model['alias'],case_id=case['case_id'],condition=condition,new_tokens=generated['new_tokens'])
                         persist()
                 (root/'captures').mkdir(exist_ok=True)
                 np.savez_compressed(root/'captures'/(model['alias']+'.npz'),positive=positive,neutral=neutral,train_labels=np.asarray(train_labels),
@@ -122,14 +148,19 @@ def execute_integrated(config,output,*,backend_factory=None):
                 result['models'].append({**model,'status':'completed','seconds':time.perf_counter()-started,'resolved_revision':revision,
                     'selected_layer':layer,'scanned_layers':layers,'vector_path':vector.relative_to(root).as_posix(),
                     'vector_sha256':vector_hash,'vector_reused':bool(reuse),
+                    'architecture':architecture,'weight_summaries':weight_summary,
                     'peak_vram_bytes':int(backend.torch.cuda.max_memory_allocated()) if hasattr(backend,'torch') else None})
             except Exception as exc:
+                emit('error','Model experiment failed: '+repr(exc),model_alias=model['alias'],stage=context.get('stage'))
                 result['failures'].append({**model,**context,'exception':repr(exc)})
                 result['models'].append({**model,'status':'failed','seconds':time.perf_counter()-started})
             finally:
                 if backend is not None:backend.close()
                 persist()
         result['status']='completed' if not result['failures'] else ('partial' if result['results'] else 'failed')
-    except Exception as exc:result['status']='failed';result['failures'].append({'exception':repr(exc)})
+        emit('completed' if result['status']=='completed' else 'error','Experiment '+result['status'],generations=len(result['results']))
+    except Exception as exc:
+        result['status']='failed';result['failures'].append({'exception':repr(exc)})
+        emit('error','Experiment failed: '+repr(exc))
     finally:persist()
     return path

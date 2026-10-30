@@ -1,3 +1,14 @@
+# Dynamic visualization upgrade 2026-10-30
+
+- Added evidence-gated lifecycle events, isolated status polling, and explicit live/recorded/demonstration modes. Runtime CUDA readiness requires a successful tensor operation.
+- Added Blender-authored assets and a dependency-free CPU-compatible scene with synchronized captured-layer controls, reduced motion, and 2D fallback.
+- Added exact means/subtraction/native-vector inspection, bounded real weight samples, activation plots, and requested-versus-observed steering arithmetic. Layer-specific readouts never reuse generation captures from another layer.
+- Real private T4 acceptance completed: Qwen 0.5B FP16, two short generations, 12 runtime events, 24 layers / 896 hidden dimensions, and six sampled parameter tensors. Evidence: `evidence/visual-lifecycle/`.
+- 48 CPU tests pass. Five app entrypoints and recorded-data UI paths pass. Blender source and GLB integrity verified. See `docs/DYNAMIC_VISUALIZATION.md` for commands and limits.
+- Kaggle status polling cannot expose live internal GPU/model telemetry before output publication. No scheduler position, free-capacity percentage, or fabricated live measurements are displayed. NF4 floating-point weight inspection remains unavailable without dequantization.
+
+---
+
 # Implementation review 2026-10-29
 
 - Fixed duplicate-pair counting and whitespace-based train/test/inference leakage in the integrated CSV contract.

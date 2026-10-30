@@ -3,6 +3,7 @@ from pathlib import Path
 import copy
 import json
 import os
+import numpy as np
 import pandas as pd
 import streamlit as st
 from .experiment_inputs import probe_model,csv_template,parse_experiment_csv,emotion_colors
@@ -80,6 +81,7 @@ def _setup():
     if st.button('Check account'):
         try:
             run_cli(['kernels','list','--mine','--page-size','1','--csv'],token=token,timeout=45)
+            st.session_state['verified_kaggle_username']=username
             st.success('Kaggle accepted this credential.')
         except Exception as exc:st.error(str(exc))
     layer=None;tokens=32;seed=42;temperature=0.;sweeps=True
@@ -96,7 +98,8 @@ def _setup():
         generations=len(models)*(len(dataset['tests'])+(2*len(dataset['emotions']) if sweeps else 0))
         st.caption(f'This run records {generations} generations. Models load sequentially. Test CSV rows remain ungraded against unapproved course thresholds.')
     st.caption('Run sends the selected CSV rows, model settings and lab source to your Kaggle account and uses its GPU quota.')
-    if st.button('Run experiment',type='primary',disabled=not models or not dataset or not username.strip()):
+    if st.session_state.get('lab_demo'):st.caption('Turn off demonstration mode to submit a real Kaggle experiment.')
+    if st.button('Run experiment',type='primary',disabled=not models or not dataset or not username.strip() or st.session_state.get('lab_demo',False)):
         try:
             _submit({'schema':'mm-emotion.integrated-request.v2',
                 'models':[{k:m[k] for k in ['alias','model_id','revision','precision']} for m in models],
@@ -115,52 +118,91 @@ def _results():
     ref=st.selectbox('Experiment',refs,index=refs.index(active) if active in refs else 0,
         format_func=lambda r:next(j['configuration']['models'][0]['model_id']+' · '+j['created_utc'][:16]+' UTC' for j in jobs if j['ref']==r))
     job=next(j for j in jobs if j['ref']==ref)
-    a,b=st.columns([4,1]);a.write('Status: **'+job['status']+'**')
-    if b.button('Update results'):
-        try:
-            refresh_job(job,token=st.session_state.get('account_token'))
-            if job['status'] in {'complete','error'}:download_job(job,token=st.session_state.get('account_token'))
-            st.rerun()
-        except Exception as exc:st.error(str(exc))
-    if not job.get('result_path'):
-        st.write('Kaggle is running a queued GPU batch. Use Update results to check progress and fetch the finished measurements.')
-        st.link_button('Open private job details',job['url']);return
-    path=Path(job['result_path']);result=json.loads(path.read_text(encoding='utf8'))
+    from .lifecycle_ui import monitor
+    monitor(job,_inspect_result)
+
+
+def _inspect_result(job,result,snapshot):
+    path=Path(job['result_path'])
     if result['failures']:
         st.error('Some models could not complete this experiment.')
         with st.expander('Compatibility and error details'):st.json(result['failures'])
     complete=[m for m in result['models'] if m['status']=='completed']
-    if not complete:return
+    if not complete:
+        from .lifecycle_ui import render_scene
+        render_scene(snapshot,key=job['ref']+'_failed_scene')
+        st.info('No complete model measurements are available. The error recording is preserved; return to Setup to submit a corrected experiment.')
+        st.link_button('Open private job diagnostics',job['url'])
+        return
     aliases=[m['alias'] for m in complete]
     alias=st.selectbox('Model',aliases,format_func=lambda a:next(m['model_id']+' · '+m['precision'] for m in complete if m['alias']==a))
     model=next(m for m in complete if m['alias']==alias)
+    from .lifecycle_ui import render_scene,replay_controls
+    snapshot={**snapshot,'architecture':model.get('architecture')}
+    snapshot=replay_controls(result,snapshot,alias)
+    layer_key='inspect_'+alias+'_'+str(path)+'_layer'
+    scene_key=job['ref']+'_'+alias+'_scene'
+    packet=st.session_state.get(scene_key)
+    if isinstance(packet,dict) and packet.get('nonce')!=st.session_state.get(layer_key+'_nonce') and packet.get('layer') in model['scanned_layers']:
+        st.session_state[layer_key]=packet['layer'];st.session_state[layer_key+'_nonce']=packet['nonce']
+    scene_modes=['Recorded lifecycle','Extract direction']
+    if any(r['model_alias']==alias and r['condition']!='baseline' for r in result['results']):scene_modes.append('Steering')
+    scene_mode=st.radio('Recorded scene focus',scene_modes,index=1,horizontal=True,key=job['ref']+'_'+alias+'_focus')
+    from .inspection import layer_data,extraction_values
+    inspected=st.session_state.get(layer_key,model['selected_layer'])
+    if inspected not in model['scanned_layers']:
+        inspected=model['selected_layer'];st.session_state[layer_key]=inspected
+    emotion=st.session_state.get('inspect_'+alias+'_'+str(path)+'_emotion',result['emotions'][0])
+    inspected_data=layer_data(path,alias,inspected)
+    computed=extraction_values(inspected_data,emotion)
+    largest=np.argsort(abs(computed['raw_direction']))[-6:].tolist()
+    snapshot['extraction']={'emotion':emotion,'layer':inspected,'pairs':computed['pairs'],'hidden_dim':computed['hidden_dim'],
+        'norm':computed['raw_norm'],'dimensions':[{'index':i,'emotion_mean':float(computed['emotion_mean'][i]),
+        'neutral_mean':float(computed['neutral_mean'][i]),'difference':float(computed['raw_direction'][i])} for i in largest]}
+    if scene_mode!='Recorded lifecycle':
+        snapshot={**snapshot,'state':'vector_subtraction' if scene_mode=='Extract direction' else 'emotion_steering',
+            'message':'Recorded-data illustration: '+('matched means → subtraction → unit normalization' if scene_mode=='Extract direction' else 'native vector addition; inspect actual requested versus observed deltas below')}
+    packet=render_scene(snapshot,key=scene_key,
+        selected_layer=inspected,inspectable_layers=model['scanned_layers'])
+    if isinstance(packet,dict) and packet.get('nonce')!=st.session_state.get(layer_key+'_nonce') and packet.get('layer') in model['scanned_layers']:
+        st.session_state[layer_key]=packet['layer'];st.session_state[layer_key+'_nonce']=packet['nonce']
+        st.rerun() # Publish the new component selection before rendering dependent charts.
     cases=[r for r in result['classifications'] if r['model_alias']==alias]
     case_id=st.selectbox('Test case',[c['case_id'] for c in cases],format_func=lambda i:next(c['case_id']+' · '+c['prompt'][:85] for c in cases if c['case_id']==i))
     case=next(c for c in cases if c['case_id']==case_id)
-    st.caption(f"Layer {model['selected_layer']} · revision {str(model.get('resolved_revision'))[:12]} · vectors {'reused' if model.get('vector_reused') else 'learned from CSV training rows'}")
-    readouts=[r for r in result['results'] if r['model_alias']==alias and r.get('case_id')==case_id]
+    st.caption(f"Inspecting layer {inspected} · run intervention layer {model['selected_layer']} · revision {str(model.get('resolved_revision'))[:12]} · vectors {'reused' if model.get('vector_reused') else 'learned from CSV training rows'}")
+    readouts=[r for r in result['results'] if r['model_alias']==alias and r.get('case_id')==case_id and r.get('observed_prefill_layer_0based')==inspected]
     readout_names=['Input minus neutral']+[r['condition'] for r in readouts]
     default_readout=len(readout_names)-1 if result['configuration'].get('inference_prompt') else 0
-    selected_readout=st.selectbox('Activation readout',readout_names,index=default_readout,key=job['ref']+'_readout_'+case_id)
+    selected_readout=st.selectbox('Activation readout',readout_names,index=default_readout,key=job['ref']+'_'+alias+'_readout_'+str(inspected)+'_'+case_id)
     measured=next((r for r in readouts if r['condition']==selected_readout),None)
-    scores=measured['emotion_scores'] if measured else case['scores']
-    closest=measured['closest_emotion'] if measured else case['closest_emotion']
-    st.subheader('Emotion alignment')
+    from .integrated_experiment import score_emotions
+    case_index=inspected_data['case_ids'].index(case_id)
+    input_match=score_emotions(inspected_data['raw'][case_index]-inspected_data['reference'][case_index],inspected_data['directions'],inspected_data['emotions'])
+    scores=measured['emotion_scores'] if measured else input_match['scores']
+    closest=measured['closest_emotion'] if measured else input_match['closest_emotion']
+    st.subheader('Emotion alignment · layer '+str(inspected))
+    if not readouts:st.caption('Generation snapshots were not collected at this layer. Select the run intervention layer to inspect actual steering readouts.')
     st.write('Closest emotion vector: **'+str(closest or 'No positive match')+'**')
     st.caption('Each gauge shows cosine alignment of the neutral-subtracted activation with a learned vector. Scores range from −1 to +1; they are not probabilities or calibrated emotion labels.')
-    from .experiment_figures import emotion_gauge,experiment_animation,subtraction_chart
+    from .experiment_figures import emotion_gauge,experiment_animation,experiment_animation_2d,subtraction_chart
     labels=result['emotions'];colors=emotion_colors(labels)
     for offset in range(0,len(labels),3):
         columns=st.columns(min(3,len(labels)-offset))
         for col,label in zip(columns,labels[offset:offset+3]):col.plotly_chart(emotion_gauge(label,scores[label],colors[label]),width='stretch',config={'displayModeBar':False})
     geometry,text,table=st.tabs(['Experiment playback','Generated text','All test results'])
     with geometry:
+        from .scientific_ui import render_inspection
+        render_inspection(result,path,alias)
+        st.subheader('Recorded test-case playback · layer '+str(inspected))
         st.caption('Replay: input → matched neutral → subtraction → vector match → measured steering states.')
-        st.plotly_chart(experiment_animation(result,path,alias,case_id),width='stretch')
+        projection=st.radio('Test-case projection',['2D PCA (no WebGL)','3D PCA'],horizontal=True,key=job['ref']+'_'+alias+'_projection')
+        animation=experiment_animation_2d if projection.startswith('2D') else experiment_animation
+        st.plotly_chart(animation(result,path,alias,case_id,inspected),width='stretch')
         st.caption('All activation points come from model captures. Difference vectors are computed from those captures. Direction arrows are scaled for visibility; PCA is a reduced-dimensional view.')
         with st.expander('See the subtraction by hidden dimension'):
             st.latex(r'\Delta h_\ell = h_\ell(\mathrm{input}) - h_\ell(\mathrm{neutral})')
-            st.plotly_chart(subtraction_chart(result,path,alias,case_id),width='stretch')
+            st.plotly_chart(subtraction_chart(result,path,alias,case_id,inspected),width='stretch')
     with text:
         for row in result['results']:
             if row['model_alias']==alias and row.get('case_id')==case_id:
@@ -175,6 +217,8 @@ def _results():
     st.subheader('Inference with emotion steering')
     st.caption('Set how much of each native vector to add or subtract. The next private Kaggle job reuses these exact vectors and checkpoint revision, and compares your settings with zero steering.')
     weights={};prefix=job['ref']+'_'+alias
+    steering_layer=st.selectbox('Steering layer (native vectors available)',model['scanned_layers'],
+        index=model['scanned_layers'].index(model['selected_layer']),key=prefix+'_steering_layer')
     for offset in range(0,len(labels),3):
         columns=st.columns(min(3,len(labels)-offset))
         for col,label in zip(columns,labels[offset:offset+3]):
@@ -189,7 +233,7 @@ def _results():
     if st.button('Generate with these emotion settings',type='primary'):
         try:
             config=copy.deepcopy(result['configuration'])
-            config.update(models=[{k:model.get(k) for k in ['alias','model_id','precision']}],layer=model['selected_layer'],
+            config.update(models=[{k:model.get(k) for k in ['alias','model_id','precision']}],layer=steering_layer,
                 inference_prompt=prompt,inference_neutral=neutral,steering_weights=weights,analysis_sweeps=False,
                 reuse_vectors={alias:{'npz':'inputs/'+alias+'.npz','metadata':'inputs/'+alias+'.json'}})
             config['models'][0]['revision']=model['resolved_revision']
@@ -213,7 +257,12 @@ def main():
     st.caption('Model link, test CSV, and your Kaggle account. Learn emotion directions, inspect neutral subtraction, and steer inference.')
     with st.container(key='lab_workspace'):
         view=st.radio('Workspace',['Setup','Results & steering'],horizontal=True,label_visibility='collapsed',key='lab_view')
-    if view=='Setup':_setup()
+    if view=='Setup':
+        controls,visual=st.columns([1,1.4],gap='large')
+        with controls:_setup()
+        with visual:
+            from .lifecycle_ui import idle_workspace
+            idle_workspace()
     else:_results()
     with st.expander('Advanced tools'):
         st.markdown('[Local GPU workbench](/Local_Vector_Workbench) · [Legacy batch experiments](/Multi_Model_Experiments) · [Course report builder](/CMPE187_Report_Builder)')

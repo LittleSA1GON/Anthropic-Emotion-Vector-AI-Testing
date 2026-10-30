@@ -25,7 +25,9 @@ def test_request_bounds_baseline_and_disjoint_data():
 
 
 def test_private_notebook_and_no_credentials_in_payload(tmp_path,monkeypatch):
+    import ast,base64,io,zipfile
     (tmp_path/'mm_emotion').mkdir();(tmp_path/'mm_emotion'/'x.py').write_text('public source')
+    (tmp_path/'assets').mkdir();(tmp_path/'assets'/'decorative.blend').write_bytes(b'large local illustration')
     (tmp_path/'.env').write_text('DO_NOT_EMBED_THIS')
     monkeypatch.setenv('KAGGLE_API_TOKEN','SESSION_ONLY_TOKEN')
     job=prepare_job(tmp_path,'researcher',request(),job_id='mm-emotion-unit-job')
@@ -34,6 +36,13 @@ def test_private_notebook_and_no_credentials_in_payload(tmp_path,monkeypatch):
     assert metadata['is_private'] is True and metadata['id'].startswith('researcher/')
     serialized=''.join(p.read_text() for p in Path(job['directory']).rglob('*.json'))+(upload/'experiment.ipynb').read_text()
     assert 'SESSION_ONLY_TOKEN' not in serialized and 'DO_NOT_EMBED_THIS' not in serialized
+    notebook=json.loads((upload/'experiment.ipynb').read_text());tree=ast.parse(''.join(notebook['cells'][0]['source']))
+    encoded=next(n.args[0].value for n in ast.walk(tree) if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=='b64decode')
+    with zipfile.ZipFile(io.BytesIO(base64.b64decode(encoded))) as archive:
+        assert not any(n.startswith('assets/') for n in archive.namelist())
+        assert 'mm_emotion/x.py' in archive.namelist()
+        manifest=json.loads(archive.read('SOURCE_SHA256.json'))
+        assert manifest['schema']=='mm-emotion.worker-source.v1'
     monkeypatch.setattr('mm_emotion.kaggle_runner.run_cli',lambda *a,**kw:'Kernel version 1 successfully pushed https://www.kaggle.com/code/researcher/server-assigned-slug')
     assert submit_job(job,token='PRIVATE')['status']=='submitted'
     assert job['ref']=='researcher/server-assigned-slug'
@@ -49,6 +58,18 @@ def test_cli_token_uses_subprocess_env_and_redacts_errors(monkeypatch):
         return SimpleNamespace(returncode=1,stdout='failure SENSITIVE',stderr='')
     monkeypatch.setattr('mm_emotion.kaggle_runner.subprocess.run',fake_run)
     with pytest.raises(RuntimeError,match=r'failure \[redacted\]'):run_cli(['kernels','list'],token='SENSITIVE')
+
+
+def test_failed_submission_does_not_claim_a_running_notebook(tmp_path,monkeypatch):
+    from mm_emotion.lifecycle import compute_snapshot
+    job=prepare_job(tmp_path,'researcher',request(),job_id='mm-emotion-failed-job')
+    def fail(*args,**kwargs):raise RuntimeError('HTTP 400 SaveKernel')
+    monkeypatch.setattr('mm_emotion.kaggle_runner.run_cli',fail)
+    with pytest.raises(RuntimeError):submit_job(job)
+    persisted=json.loads((Path(job['directory'])/'job.json').read_text())
+    snapshot=compute_snapshot(persisted)
+    assert persisted['status']=='failed' and snapshot['state']=='error' and snapshot['gpu'] is None
+    assert 'no runtime was confirmed' in snapshot['message']
 
 
 class TinyBackend:

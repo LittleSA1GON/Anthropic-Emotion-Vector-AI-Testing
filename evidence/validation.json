@@ -1,7 +1,7 @@
 {
   "schema": "mm-emotion.validation.v1",
   "cpu_tests": {
-    "passed": 42,
+    "passed": 48,
     "failed": 0,
     "command": "python -m pytest -q",
     "mocked_or_tensor_tests_not_model_evidence": true
@@ -9,7 +9,7 @@
   "notebook": {
     "schema_valid": true,
     "all_code_cells_compile": true,
-    "reconstructed_source_tests_passed": 42,
+    "reconstructed_source_tests_passed": 48,
     "reconstruction_evidence": "evidence/notebook-tests.xml"
   },
   "streamlit": {
@@ -211,5 +211,12 @@
     ],
     "preserved": "existing UI refinements"
   },
-  "research_pilot": "evidence/anthropic-pilot.json"
+  "research_pilot": "evidence/anthropic-pilot.json",
+  "dynamic_visualization": {
+    "client": "evidence/visual-client-validation.json",
+    "gpu": "evidence/visual-lifecycle/verification.json",
+    "runtime_events": 12,
+    "sampled_parameter_tensors": 6,
+    "generations": 2
+  }
 }

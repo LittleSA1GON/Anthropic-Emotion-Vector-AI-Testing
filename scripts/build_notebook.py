@@ -6,6 +6,8 @@ from __future__ import annotations
 import base64
 import io
 import zipfile
+import hashlib
+import json
 from pathlib import Path
 import nbformat as nbf
 import sys
@@ -21,10 +23,16 @@ EXCLUDE_FILES = {"MIA_COMMIT_PIN.txt", "Model_Mountain_Emotion_Lab.zip", NOTEBOO
 def build_zip():
     memory = io.BytesIO()
     with zipfile.ZipFile(memory, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for path in sorted(source_files(ROOT)):
+        hashes={}
+        for path in sorted(source_files(ROOT,frontend_assets=False)):
+            if path.name=='SOURCE_SHA256.json':continue
             info = zipfile.ZipInfo((Path('Model_Mountain_Emotion_Lab') / path.relative_to(ROOT)).as_posix(), (2026,1,1,0,0,0))
             info.compress_type = zipfile.ZIP_DEFLATED
-            z.writestr(info, path.read_bytes())
+            content=path.read_bytes();z.writestr(info,content)
+            hashes[path.relative_to(ROOT).as_posix()]=hashlib.sha256(content).hexdigest()
+        info=zipfile.ZipInfo('Model_Mountain_Emotion_Lab/SOURCE_SHA256.json',(2026,1,1,0,0,0));info.compress_type=zipfile.ZIP_DEFLATED
+        z.writestr(info,json.dumps({'schema':'mm-emotion.notebook-source.v1','files':hashes,
+            'excluded':'Local Blender/frontend assets are delivered in GitHub and the full ZIP, not the GPU notebook'},indent=2))
     return memory.getvalue()
 
 
@@ -41,7 +49,7 @@ def main():
     notebook.cells = [
         nbf.v4.new_markdown_cell('''# Model Mountain — Emotion Vector Research (Kaggle single-upload edition)
 
-**Includes all source code, synthetic data, tests, agent handoff, and optional MIA adapter embedded inside this notebook.** No additional ZIP needed. Import this `.ipynb` into Kaggle → Settings → Accelerator → GPU T4 ×2 for real experiments; Internet must be on for model/packages. (Two T4s do not pool VRAM.)
+**Includes research source code, synthetic data, tests, agent handoff, and optional MIA adapter embedded inside this notebook.** No additional ZIP is needed for the Kaggle widget workflows. Local Blender/Canvas assets are delivered in GitHub and the full ZIP to keep GPU notebook uploads small. Import this `.ipynb` into Kaggle → Settings → Accelerator → GPU T4 ×2 for real experiments; Internet must be on for model/packages. (Two T4s do not pool VRAM.)
 
 **Integrity notice:** offline smoke tests use simulated vectors and are **not** real emotion evidence. `RUN_REAL_HF`, `RUN_NF4` and `RUN_MIA` are opt-in. Separate measured T4 experiments are documented in the release's `evidence/` directory; importing this notebook does not reproduce them automatically. MIA and GTX 1080 Ti execution remain unverified. On a GTX 1080 Ti use the local HF workflow.
 

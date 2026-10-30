@@ -9,18 +9,18 @@ FONT_STACK = '"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Arial,sans-seri
 MONO_STACK = '"IBM Plex Mono",ui-monospace,Consolas,monospace'
 
 # Shared with the Plotly figures so charts and chrome read as one system.
-INK = '#192b36'
-INK_SOFT = '#536674'
-RULE = '#d4dce1'
-SURFACE = '#f8fafb'
-PANEL = '#edf1f4'
-ACCENT = '#315b43'
+INK = '#e7edf4'
+INK_SOFT = '#a6b6c8'
+RULE = '#293749'
+SURFACE = '#0c121d'
+PANEL = '#142132'
+ACCENT = '#7dd4c0'
 
 _CSS = '''<style>
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
 :root {
-  --lab-ink:#192b36; --lab-ink-soft:#536674; --lab-rule:#d4dce1; --lab-surface:#f8fafb;
-  --lab-panel:#edf1f4; --lab-green:#315b43; --lab-green-tint:#e3ece6;
+  --lab-ink:#e7edf4; --lab-ink-soft:#a6b6c8; --lab-rule:#293749; --lab-surface:#0c121d;
+  --lab-panel:#142132; --lab-green:#7dd4c0; --lab-green-tint:#183c37;
   --lab-sans:__SANS__; --lab-mono:__MONO__;
   --lab-ease:cubic-bezier(.16,1,.3,1); --lab-fast:120ms; --lab-base:200ms; --lab-slow:320ms;
 }
@@ -77,7 +77,7 @@ h3 { font-size:1.15rem !important; font-weight:600 !important; letter-spacing:-.
 }
 [data-testid="stButton"] button:hover:not(:disabled), [data-testid="stDownloadButton"] button:hover:not(:disabled),
 [data-testid="stLinkButton"] a:hover { border-color:var(--lab-green); color:var(--lab-green); }
-[data-testid="stButton"] button[kind="primary"]:hover:not(:disabled) { color:#fff; background:#274a36; border-color:#274a36; }
+[data-testid="stButton"] button[kind="primary"]:hover:not(:disabled) { color:#061b17; background:#99e2d1; border-color:#99e2d1; }
 [data-testid="stButton"] button:active:not(:disabled), [data-testid="stDownloadButton"] button:active:not(:disabled),
 [data-testid="stLinkButton"] a:active { transform:translateY(1px); }
 [data-testid="stButton"] button:disabled { cursor:not-allowed; }
@@ -96,7 +96,7 @@ input:focus-visible { outline:2px solid var(--lab-green) !important; outline-off
 .st-key-lab_workspace [data-testid="stRadioOption"] p { font-weight:500; }
 .st-key-lab_workspace [data-testid="stRadioOption"]:hover { color:var(--lab-ink); }
 .st-key-lab_workspace [data-testid="stRadioOption"][data-selected="true"] {
-  background:#fff; color:var(--lab-ink); box-shadow:0 1px 2px rgba(25,43,54,.14);
+  background:#20344a; color:var(--lab-ink); box-shadow:0 1px 2px rgba(25,43,54,.14);
 }
 .st-key-lab_workspace [data-testid="stRadioOption"]:has(input:focus-visible) { outline:2px solid var(--lab-green); outline-offset:1px; }
 

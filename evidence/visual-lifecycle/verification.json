@@ -1,0 +1,176 @@
+{
+  "schema": "mm-emotion.visual-lifecycle-verification.v1",
+  "status": "completed",
+  "kaggle_ref": "littlesa1gon/mm-emotion-20261030-203224-9fd9cb",
+  "submitted_source_zip_sha256": "791b89564abd7139464fbaf1589b581d22406ff2f895eaebb8189918ccd66e6a",
+  "worker_source_hashes_verified": 123,
+  "gpu": {
+    "cuda_verified": true,
+    "name": "Tesla T4",
+    "total_memory_bytes": 15636037632,
+    "free_memory_bytes_at_probe": 15507193856,
+    "device_index": 0,
+    "verification": "torch CUDA tensor operation",
+    "observed_utc": "2026-10-30T20:33:45.294054+00:00"
+  },
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architecture": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "format": "Hugging Face / PyTorch",
+    "model_type": "qwen2",
+    "layers": 24,
+    "hidden_dim": 896,
+    "attention_heads": 14,
+    "intermediate_dim": 4864,
+    "parameter_count": 494032768,
+    "parameter_count_method": "transformers.num_parameters",
+    "precision": "fp16",
+    "device": "cuda:0",
+    "capabilities": {
+      "generation": true,
+      "activation_capture": true,
+      "steering": true,
+      "weight_inspection": true
+    },
+    "components": [
+      {
+        "layer": 0,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 1,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 2,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 3,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 4,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 5,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 6,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 7,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 8,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 9,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 10,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 11,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 12,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 13,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 14,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 15,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 16,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 17,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 18,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 19,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 20,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 21,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 22,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      },
+      {
+        "layer": 23,
+        "attention": "Qwen2Attention",
+        "mlp": "Qwen2MLP"
+      }
+    ]
+  },
+  "parameter_tensors_sampled": 6,
+  "weight_sample_limit": 2048,
+  "generations": 2,
+  "lifecycle_events": 12,
+  "states": [
+    "gpu_ready",
+    "model_loading",
+    "activation_capture",
+    "activation_averaging",
+    "vector_subtraction",
+    "weights_inspection",
+    "comparison",
+    "emotion_steering",
+    "completed"
+  ],
+  "all_native_directions_recomputed": true,
+  "steering_prefill_rounding_residual_norm": 0.0031832176438032953,
+  "interpretation": "Instrumentation and arithmetic acceptance only; two 8-token generations do not establish emotional accuracy; no thresholds graded."
+}

@@ -6,6 +6,7 @@ is used when a session token is not supplied.
 """
 from __future__ import annotations
 import base64
+import hashlib
 import io
 import json
 import os
@@ -94,13 +95,21 @@ def prepare_job(root,username,request,*,job_id=None,attachments=None):
     upload=directory/'upload';upload.mkdir(parents=True,exist_ok=False)
     memory=io.BytesIO()
     with zipfile.ZipFile(memory,'w',zipfile.ZIP_DEFLATED) as archive:
-        for p in sorted(source_files(root)):
-            archive.writestr(p.relative_to(root).as_posix(),p.read_bytes())
+        worker_hashes={}
+        for p in sorted(source_files(root,frontend_assets=False)):
+            relative=p.relative_to(root).as_posix()
+            # Rendering runs in the local client; decorative Blender binaries
+            # are not dependencies of the remote inference worker.
+            if relative.startswith('assets/') or relative=='SOURCE_SHA256.json':continue
+            contents=p.read_bytes();archive.writestr(relative,contents)
+            worker_hashes[relative]=hashlib.sha256(contents).hexdigest()
         for name,source in (attachments or {}).items():
             if not re.fullmatch(r'inputs/[a-zA-Z0-9_-]+\.(npz|json)',name):raise ValueError('Invalid attachment filename')
             source=Path(source)
             if not source.is_file() or source.stat().st_size>50_000_000:raise ValueError('Invalid native-vector attachment')
             archive.writestr(name,source.read_bytes())
+        archive.writestr('SOURCE_SHA256.json',json.dumps({'schema':'mm-emotion.worker-source.v1',
+            'files':worker_hashes,'excluded':'Local Blender/frontend assets; attachments have their own vector checksums'},indent=2))
     payload=base64.b64encode(memory.getvalue()).decode('ascii')
     code="""import base64,io,zipfile,os,sys,subprocess,json
 from pathlib import Path
@@ -156,8 +165,14 @@ def run_cli(arguments,*,token=None,timeout=120):
 
 def submit_job(job,*,token=None):
     if job['status']!='prepared':raise ValueError('This job has already been submitted; create a new request')
-    text=run_cli(['kernels','push','-p',str(Path(job['directory'])/'upload'),'--accelerator','NvidiaTeslaT4'],token=token)
-    if 'successfully pushed' not in text.lower():raise RuntimeError(text)
+    from .lifecycle import record_job_event,clean_message
+    try:
+        text=run_cli(['kernels','push','-p',str(Path(job['directory'])/'upload'),'--accelerator','NvidiaTeslaT4'],token=token)
+        if 'successfully pushed' not in text.lower():raise RuntimeError(text)
+    except Exception as exc:
+        job.update(status='failed',status_source='submission',submission_message=clean_message(exc))
+        record_job_event(job,'error','Notebook submission failed; no runtime was confirmed.',source='client')
+        save_job(job);raise
     # Kaggle may derive a different slug from the title; its returned URL is authoritative.
     created=re.search(r'https://www\.kaggle\.com/code/([a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+)',text)
     if created:
@@ -165,15 +180,26 @@ def submit_job(job,*,token=None):
         if actual.split('/')[0].lower()!=job['ref'].split('/')[0].lower():
             raise RuntimeError('Kaggle returned a different account; check the username and API token together')
         job['ref']=actual;job['url']=created.group(0)
-    job['status']='submitted';job['submission_message']=text;save_job(job)
+    job['status']='submitted';job['submission_message']=text
+    record_job_event(job,'gpu_requested','Kaggle accepted the notebook submission. GPU availability is not confirmed.')
+    save_job(job)
     return job
 
 
 def refresh_job(job,*,token=None):
-    text=run_cli(['kernels','status',job['ref']],token=token,timeout=45)
+    from .lifecycle import utc_now,clean_message,record_job_event
+    try:text=run_cli(['kernels','status',job['ref']],token=token,timeout=12)
+    except Exception as exc:
+        job['connection_error']=clean_message(exc);job['status_checked_utc']=utc_now();save_job(job)
+        record_job_event(job,'disconnected',job['connection_error'],source='connection')
+        raise
     match=re.search(r'KernelWorkerStatus\.([A-Z_]+)',text)
     state=match.group(1).lower() if match else 'unknown'
-    job['status']=state;job['status_message']=text;save_job(job)
+    job.pop('connection_error',None)
+    job['status']=state;job['status_message']=text;job['status_source']='kaggle_status';job['status_checked_utc']=utc_now();save_job(job)
+    if state=='queued':record_job_event(job,'gpu_queued','Kaggle reports QUEUED; no verified runtime GPU.',source='kaggle_status',provider_status=state)
+    elif state=='running':record_job_event(job,'gpu_requested','Kaggle reports RUNNING; GPU verification remains unobservable until runtime outputs.',source='kaggle_status',provider_status=state)
+    elif state in {'complete','error','cancelled'}:record_job_event(job,'completed' if state=='complete' else 'error','Kaggle notebook status: '+state,source='kaggle_status',provider_status=state)
     return job
 
 

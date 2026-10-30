@@ -14,6 +14,8 @@ python launch.py --check
 
 Model loading and GPU execution happen in your Kaggle account. The local client needs no model-weight downloads.
 
+The [dynamic visualization guide](DYNAMIC_VISUALIZATION.md) explains live-status limits, recorded event playback, weight/activation inspection, and Blender regeneration. Detailed runtime events become available when Kaggle publishes outputs; the UI does not infer GPU allocation from a submitted or running job.
+
 ## Setup
 
 1. Paste a Hugging Face checkpoint link, such as `https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct`, and choose **Check and add model**. Add up to three checkpoints. The preflight checks the architecture and records the revision; the actual Kaggle run verifies weight loading and decoder hooks. Unsupported architectures report an error rather than returning simulated results.

@@ -299,6 +299,28 @@
         "built-in research and original course presets work",
         "Kaggle credential checked without submitting a run"
       ]
+    },
+    {
+      "id": "T17",
+      "priority": 17,
+      "status": "complete_gpu_ui",
+      "objective": "Upgrade the existing lab with truthful lifecycle visualization, Blender assets and exact scientific inspection",
+      "entry": [
+        "docs/DYNAMIC_VISUALIZATION.md",
+        "mm_emotion/lifecycle.py",
+        "mm_emotion/inspection.py",
+        "mm_emotion/lifecycle_ui.py",
+        "mm_emotion/scientific_ui.py"
+      ],
+      "acceptance": [
+        "GPU readiness requires actual runtime CUDA operation",
+        "no invented scheduler or live telemetry data",
+        "native architecture and bounded real parameter summaries",
+        "exact captured-layer extraction and steering comparisons",
+        "editable Blender source, GLB and CPU-compatible runtime scene",
+        "clearly labeled recorded/demo content, reduced motion and 2D mode",
+        "focused, full CPU, browser and real T4 acceptance checks"
+      ]
     }
   ]
 }

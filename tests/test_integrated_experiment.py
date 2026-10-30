@@ -90,6 +90,10 @@ def test_multi_emotion_detection_and_reused_mixed_steering(tmp_path,monkeypatch)
     assert result['classifications'][0]['closest_emotion']=='happiness'
     assert result['classifications'][1]['closest_emotion']=='anger'
     assert len(result['results'])==6
+    stages={e['state'] for e in result['lifecycle_events']}
+    assert {'model_loading','activation_capture','activation_averaging','vector_subtraction','emotion_steering','comparison','completed'}<=stages
+    assert 'gpu_ready' not in stages and all(e['mode']=='test' for e in result['lifecycle_events'])
+    assert result['models'][0]['weight_summaries']['available'] is False
     assert all(r['thresholds_approved'] is False for r in result['classifications'])
     (tmp_path/'inputs').mkdir()
     import shutil
@@ -104,6 +108,7 @@ def test_multi_emotion_detection_and_reused_mixed_steering(tmp_path,monkeypatch)
     request['models'][0]['precision']='fp16'
     failed=json.loads(execute_integrated(request,tmp_path/'wrong',backend_factory=MultiBackend).read_text())
     assert failed['status']=='failed' and 'precision' in failed['failures'][0]['exception']
+    assert failed['lifecycle_events'][-1]['state']=='error'
 
 
 def test_zero_delta_remains_unscorable():

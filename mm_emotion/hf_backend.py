@@ -182,6 +182,14 @@ class HFBackend:
             if handle is not None:
                 handle.remove()
 
+    def describe(self):
+        from .inspection import describe_backend
+        return describe_backend(self)
+
+    def inspect_weights(self, layers):
+        from .inspection import inspect_weights
+        return inspect_weights(self,layers)
+
     def close(self):
         """Release weights before another checkpoint is loaded."""
         import gc

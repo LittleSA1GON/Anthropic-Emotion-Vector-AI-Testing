@@ -18,4 +18,5 @@ access_token
 dist/
 tmp/
 *.log
+*.blend[0-9]
 notebooks/kernel-metadata.json
