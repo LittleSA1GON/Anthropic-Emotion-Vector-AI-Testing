@@ -37,13 +37,15 @@ def main():
     chunks = [payload[i:i+100] for i in range(0,len(payload),100)]
     notebook = nbf.v4.new_notebook(metadata={"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                                              "language_info": {"name": "python"},
-                                             "model_mountain_status": "CPU verified; real Kaggle GPU and MIA unverified"})
+                                             "model_mountain_status": "CPU verified; measured Kaggle T4 evidence in release; IBM MIA unverified"})
     notebook.cells = [
         nbf.v4.new_markdown_cell('''# Model Mountain — Emotion Vector Research (Kaggle single-upload edition)
 
 **Includes all source code, synthetic data, tests, agent handoff, and optional MIA adapter embedded inside this notebook.** No additional ZIP needed. Import this `.ipynb` into Kaggle → Settings → Accelerator → GPU T4 ×2 for real experiments; Internet must be on for model/packages. (Two T4s do not pool VRAM.)
 
-**Integrity notice:** offline smoke tests use simulated vectors and are **not** real emotion evidence. `RUN_REAL_HF`, `RUN_NF4` and `RUN_MIA` are opt-in; this notebook does not claim any GPU experiments were executed during authoring. MIA is a separate, currently unverified path. On a GTX 1080 Ti use HF locally, not MIA.
+**Integrity notice:** offline smoke tests use simulated vectors and are **not** real emotion evidence. `RUN_REAL_HF`, `RUN_NF4` and `RUN_MIA` are opt-in. Separate measured T4 experiments are documented in the release's `evidence/` directory; importing this notebook does not reproduce them automatically. MIA and GTX 1080 Ti execution remain unverified. On a GTX 1080 Ti use the local HF workflow.
+
+For the integrated model-link, CSV, emotion-gauge and mixed-steering UI, run `run.bat` (Windows) or `bash run.sh` (macOS/Linux) from the GitHub project. It uses your Kaggle API account for private GPU jobs; no local GPU is required.
 
 For multi-model direct inference and CMPE 187 classification tests, set `OPEN_MULTI_MODEL_PANEL = True`; for an opt-in GPU pilot set `RUN_MULTI_MODEL_PILOT = True`. Both panels default to True; the automatic GPU pilot defaults to False. See `course/` and `work_handoff/` after extraction.
 

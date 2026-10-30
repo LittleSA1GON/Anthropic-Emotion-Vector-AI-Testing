@@ -7,6 +7,8 @@
 | Multi-model direct inference | `mm_emotion/multi_model.py`, `pages/1_Multi_Model_Experiments.py`, `course/model_registry.example.json` |
 | Kaggle multi-model | `mm_emotion/course_notebook_ui.py`, `scripts/build_notebook.py` |
 | Kaggle API UI | `mm_emotion/kaggle_runner.py`, `mm_emotion/remote_experiment.py`, `pages/3_Kaggle_Experiment_Lab.py`, `docs/KAGGLE_UI.md` |
+| Integrated experiment workflow | `mm_emotion/experiment_inputs.py`, `mm_emotion/integrated_experiment.py`, `mm_emotion/integrated_ui.py`, `mm_emotion/experiment_figures.py` |
+| Easy local launch | `launch.py`, `run.bat`, `run.sh`, `requirements-ui.txt` |
 | Measured activation plots and styling | `mm_emotion/activation_view.py`, `mm_emotion/ui_theme.py`, `.streamlit/config.toml` |
 | 18-case classifier, data | `mm_emotion/course_tests.py`, `course/18_test_cases.csv`, `course/training_pairs.json` |
 | Draw.io test models | `mm_emotion/drawio.py`, `course/drawio/CMPE187_All_Editable_DrawIO.drawio` |

@@ -1,0 +1,24 @@
+{
+  "status": "completed",
+  "ref": "littlesa1gon/mm-emotion-20261029-231543-23de31",
+  "source_zip_sha256": "b305508cab1872160fe7ff3b01207fc47e398a48fdcf4c80c6a9316d79d2ab11",
+  "emotions": [
+    "happiness",
+    "sadness",
+    "anger"
+  ],
+  "test_cases": 3,
+  "generations": 9,
+  "native_vectors_reused": [
+    false
+  ],
+  "revision": [
+    "7ae557604adf67be50417f59c2c2f167def9a775"
+  ],
+  "steering_weights": {
+    "happiness": 0.0,
+    "sadness": 0.0,
+    "anger": 0.0
+  },
+  "grading": "Unapproved course thresholds remain ungraded; vector matches are exploratory."
+}

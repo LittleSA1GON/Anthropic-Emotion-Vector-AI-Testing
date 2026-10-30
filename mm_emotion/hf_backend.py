@@ -25,7 +25,7 @@ def decoder_layers(model):
 
 
 class HFBackend:
-    def __init__(self, model_id: str, precision: str = "fp16", max_length: int = 512, *, token=None):
+    def __init__(self, model_id: str, precision: str = "fp16", max_length: int = 512, *, token=None, revision=None):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
         self.torch = torch
@@ -34,8 +34,8 @@ class HFBackend:
             raise ValueError("precision must be fp16, nf4 or fp32")
         from .credentials import model_token
         auth = model_token(token)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=False, token=auth)
-        kwargs = {"trust_remote_code": False, "attn_implementation": "eager", "token": auth}
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=False, token=auth,revision=revision)
+        kwargs = {"trust_remote_code": False, "attn_implementation": "eager", "token": auth,"revision":revision}
         if precision == "nf4":
             if not torch.cuda.is_available():
                 raise RuntimeError("NF4 experiment requires CUDA in this suite")

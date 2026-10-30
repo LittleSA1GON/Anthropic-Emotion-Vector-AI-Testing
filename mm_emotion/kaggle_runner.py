@@ -22,6 +22,9 @@ from .workbench import parse_pairs,sweep_grid,validate_test_prompts
 
 
 def validate_request(request):
+    if isinstance(request,dict) and request.get('schema')=='mm-emotion.integrated-request.v2':
+        from .experiment_inputs import validate_integrated_request
+        return validate_integrated_request(request)
     allowed={'models','pairs','prompts','neutral_reference','layers','intervention_layers',
              'coefficients','seeds','emotion','method','scope','max_new_tokens','max_length',
              'temperature','top_p','include_matrix'}
@@ -81,7 +84,7 @@ def validate_request(request):
     return config
 
 
-def prepare_job(root,username,request,*,job_id=None):
+def prepare_job(root,username,request,*,job_id=None,attachments=None):
     root=Path(root).resolve()
     if not re.fullmatch(r'[a-zA-Z0-9_-]{3,50}',username):raise ValueError('Enter your Kaggle username')
     config=validate_request(request)
@@ -93,6 +96,11 @@ def prepare_job(root,username,request,*,job_id=None):
     with zipfile.ZipFile(memory,'w',zipfile.ZIP_DEFLATED) as archive:
         for p in sorted(source_files(root)):
             archive.writestr(p.relative_to(root).as_posix(),p.read_bytes())
+        for name,source in (attachments or {}).items():
+            if not re.fullmatch(r'inputs/[a-zA-Z0-9_-]+\.(npz|json)',name):raise ValueError('Invalid attachment filename')
+            source=Path(source)
+            if not source.is_file() or source.stat().st_size>50_000_000:raise ValueError('Invalid native-vector attachment')
+            archive.writestr(name,source.read_bytes())
     payload=base64.b64encode(memory.getvalue()).decode('ascii')
     code="""import base64,io,zipfile,os,sys,subprocess,json
 from pathlib import Path

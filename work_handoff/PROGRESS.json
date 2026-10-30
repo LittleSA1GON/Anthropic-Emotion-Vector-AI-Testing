@@ -19,7 +19,14 @@
     "Kaggle API UI: own-account session token fields, private batch submission and returned-URL tracking",
     "Real Kaggle UI job: 6 generations with post-intervention activation snapshots at layers5/11 and 18 ungraded course cases",
     "36 CPU tests pass; 4 Streamlit pages load; measured 3D PCA animation verified",
-    "StyleKit editorial layout applied with responsive controls and visible keyboard focus"
+    "StyleKit editorial layout applied with responsive controls and visible keyboard focus",
+    "Integrated model-link preflight passed against the official Hugging Face Hub and pinned a real checkpoint revision",
+    "Multi-emotion Kaggle discovery completed: happiness/sadness/anger, three test cases and nine captured generations",
+    "Mixed native-vector inference completed: exact checkpoint/vector reuse, baseline versus happiness +2 and anger -1",
+    "40 CPU tests pass; all five UI entrypoints load without errors",
+    "Windows run.bat launcher verified: installs client dependencies and reuses the existing UI service",
+    "40 CPU tests pass from the final notebook-restored source; all 114 source hashes match",
+    "Fresh launcher startup verified on an unused port, health checked and temporary server stopped"
   ],
   "unverified": [
     "GTX 1080 Ti hardware execution",
@@ -28,7 +35,7 @@
     "Original Model Mountain v4 integration",
     "Exact Word DOCX pagination without LibreOffice"
   ],
-  "next_task": "Kaggle UI ready for user experiments; instructor scoring approval, optional MIA/v4 integration remain external.",
+  "next_task": "Easy launcher and integrated lab ready for user testing; external threshold approval and optional MIA/v4 integration remain pending.",
   "completed_task_ids": [
     "T00",
     "T01",
@@ -39,7 +46,9 @@
     "T07",
     "T10",
     "T11",
-    "T12"
+    "T12",
+    "T13",
+    "T14"
   ],
   "changed_files": [
     "mm_emotion/artifacts.py",
@@ -80,7 +89,17 @@
     "pages/3_Kaggle_Experiment_Lab.py",
     "tests/test_kaggle_runner.py",
     ".streamlit/config.toml",
-    "docs/KAGGLE_UI.md"
+    "docs/KAGGLE_UI.md",
+    "launch.py",
+    "run.bat",
+    "run.sh",
+    "mm_emotion/experiment_inputs.py",
+    "mm_emotion/integrated_experiment.py",
+    "mm_emotion/integrated_ui.py",
+    "mm_emotion/experiment_figures.py",
+    "pages/4_Local_Vector_Workbench.py",
+    "tests/test_integrated_experiment.py",
+    "data/templates/experiment_tests.csv"
   ],
   "evidence_paths": [
     "evidence/cpu-tests.xml",
@@ -94,7 +113,12 @@
     "evidence/ui-check.json",
     "notebooks/Model_Mountain_Emotion_Lab_Kaggle.ipynb",
     "dist/Model_Mountain_Emotion_Lab_FULL.zip",
-    "evidence/kaggle-ui/verification.json"
+    "evidence/kaggle-ui/verification.json",
+    "evidence/integrated-lab/discovery/verification.json",
+    "evidence/integrated-lab/steering/verification.json",
+    "data/templates/experiment_tests.csv",
+    "evidence/notebook-tests.xml",
+    "evidence/launch-check.json"
   ],
   "important": "Do not claim real model experimental outputs until GPU evidence is generated. Update this file after each Work milestone.",
   "kaggle_acceptance": {
@@ -115,7 +139,9 @@
     "T09": "Original v4 source absent; standalone extension preserved",
     "T10": "Real JSON/CSV/vector evidence consolidated, measured report generated, final source ZIP and self-contained notebook assembled",
     "T11": "Complete: per-user Kaggle API remote experiments, real prefill measurements, signed controls, UI and downloads verified on T4",
-    "T12": "Complete: StyleKit editorial theme, responsive controls and measured activation animation"
+    "T12": "Complete: StyleKit editorial theme, responsive controls and measured activation animation",
+    "T13": "Complete: model links, one train/test CSV with download, gauges, subtraction playback and multi-emotion vector reuse verified on Kaggle",
+    "T14": "Complete: first-run automatic environment setup and cross-platform launchers; container work cancelled by user"
   },
   "blockers": [
     "No local CUDA GPU (Intel Iris Xe only)",
@@ -138,5 +164,12 @@
     "ref": "littlesa1gon/emotion-vector-experiment-261029-223658-e7f4b1",
     "local_url": "http://127.0.0.1:8501/Kaggle_Experiment_Lab",
     "source_hash": "13b0fd9ad302af73bd43b18e76c457ca57f06f631a3c9ca0d9f1ef03148676d8"
+  },
+  "integrated_lab": {
+    "discovery": "completed",
+    "mixed_native_steering": "completed",
+    "launcher": "run.bat / bash run.sh",
+    "url": "http://127.0.0.1:8501",
+    "containerization": "cancelled by user; no container artifacts included"
   }
 }

@@ -1,47 +1,49 @@
-# Run experiments from the UI using your Kaggle account
+# Model link to emotion steering
 
-The **Kaggle Experiment Lab** page is a local control panel for private GPU jobs in your Kaggle account. It supports your own training pairs, test prompts, checkpoints, layer choices, signed strengths, and repeated seeds. Your computer does not need CUDA or downloaded model weights.
+## Start
 
-## Open the lab
+Install Python 3.11 or newer. Double-click `run.bat` on Windows; on macOS/Linux run `bash run.sh`. The launcher installs the UI dependencies on first use and opens http://127.0.0.1:8501. It reuses a running instance rather than opening a duplicate server.
+
+Command-line alternatives:
 
 ```bash
-python -m pip install -r requirements-ui.txt
-python -m streamlit run app_emotion.py --server.address 127.0.0.1
+python launch.py
+python launch.py --port 8502
+python launch.py --check
 ```
 
-Open `http://127.0.0.1:8501/Kaggle_Experiment_Lab`. Windows users with the project virtual environment can run `scripts/launch_kaggle_lab.ps1`.
+Model loading and GPU execution happen in your Kaggle account. The local client needs no model-weight downloads.
 
-## Your account
+## Setup
 
-Enter your Kaggle username and API token under **Compute account**. Use **Check Kaggle credentials** to verify access. Leave the token blank if your local Kaggle CLI is already authenticated.
+1. Paste a Hugging Face checkpoint link, such as `https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct`, and choose **Check and add model**. Add up to three checkpoints. The preflight checks the architecture and records the revision; the actual Kaggle run verifies weight loading and decoder hooks. Unsupported architectures report an error rather than returning simulated results.
+2. Upload a single CSV or use **Download CSV format**. The example contains twelve training pairs and the original eighteen course cases.
+3. Enter your Kaggle username and API token. A blank token uses an existing local Kaggle CLI login. Tokens remain in the UI session and subprocess environment, outside notebooks, requests, output files, and Git.
+4. Click **Run experiment**. Settings such as layer, seed, decoding temperature, and isolation examples are under **Experiment settings**.
 
-Each user's token is held in their current Streamlit session and passed through a subprocess environment. It is not saved in requests, notebooks, experiment outputs, or Git. Run your own local UI process; this is not a shared hosted service with user authentication.
+Public Qwen and SmolLM weights need no model token. Gated checkpoints require model access and an attached Kaggle `HF_TOKEN` secret; model tokens are not embedded in notebook source. Each user runs a separate local UI with their own Kaggle credentials.
 
-Public Qwen and SmolLM weights need no Hugging Face key. Gated models additionally require permission for the weights and an attached Kaggle Secret named `HF_TOKEN`; the UI does not embed model tokens in notebook source.
+## CSV format
 
-## Submit an experiment
+Required columns: `row_type,case_id,emotion,prompt,neutral_prompt`.
 
-1. Select one or more checkpoints. They load sequentially on the Kaggle worker.
-2. Edit or import at least two matched neutral/emotional training pairs. Name the direction you want to study.
-3. Choose decoder layers to scan, then the scanned layers to intervene on. Each intervention changes one layer at a time.
-4. Enter test prompts and a neutral reference that are separate from the training pairs.
-5. Choose coefficients such as `-3,0,3`, a seed, decoding settings, and an intervention scope. The zero control is mandatory.
-6. Optionally enable the original 18-case course matrix. Its thresholds remain ungraded.
-7. Click **Run on my Kaggle T4**. This sends the selected prompts, settings, and lab source to a private notebook under your account, using your GPU quota.
+- `train` rows: at least two distinct emotional/neutral prompt pairs per emotion. These learn that emotion's native direction.
+- `test` rows: new prompts and matched neutral references. They must be separate from training prompts. The emotion column can record an expected label.
+- `case_id`: a unique identifier for every row.
 
-Kaggle runs queued batches. New prompts or settings create another job rather than a continuous chat connection. The existing saved lab notebook is not overwritten.
+The template also preserves the course's abstraction, diction, intensity, expected-label, original range, and provisional-threshold columns. These classifications are not changed or silently graded. Up to six emotion labels and fifty test rows are supported.
 
-## Inspect results
+## Results and steering
 
-Open **Results**, refresh the status, and retrieve the completed outputs. Choose a checkpoint, intervention layer, prompt, and seed.
+Use **Update results** to check the queued batch and retrieve its outputs. Select the model and test case in the same workspace.
 
-- Compare actual unsteered and steered generations under the same checkpoint and sampling seed.
-- Rotate the 3D PCA plot and press Play to animate the measured prefill activation across strengths. Axes are fitted on training/reference captures only.
-- Inspect the projection and isolation table. `added_projection` is the activation change along the selected vector relative to zero. `orthogonal_delta_norm` is the change outside that vector; finite precision can produce a small residual.
-- Download the generation CSV, raw JSON, and full ZIP containing native vectors and activation captures.
+- **Emotion gauges** show raw cosine alignment of the neutral-subtracted activation with each learned direction, on a -1 to +1 scale. The closest positively aligned direction is reported; zero differences are unscorable. These scores are not probabilities or calibrated psychological labels.
+- **Experiment playback** shows input activation, matched neutral, subtraction, vector comparison, and recorded steering states. PCA axes are fitted on training captures. Direction arrows are scaled for visibility, while the activation points and subtraction data come from real model captures.
+- **Generated text** compares the zero baseline and measured isolation conditions. **All test results** exports the classification table.
+- Each emotion has a distinct, consistent color and a signed steering slider. Set several sliders to combine vectors, enter an inference prompt and matched neutral reference, and click **Generate with these emotion settings**.
 
-The snapshots come from a forward hook during real generation, after the intervention. With `decode_only` scope, the prefill snapshot correctly stays unchanged because that intervention starts later. These are reduced-dimensional model measurements, not emotion probabilities or evidence of subjective feelings.
+Inference uploads the exact native vector bundle and pins the checkpoint revision. The worker checks the model ID, precision, revision, training hash, and vector checksum before reuse. It then records an unsteered response and the requested combined intervention with the same seed. Model weights are not fine-tuned. Hooks are removed after generation.
 
-## Interface direction
+Kaggle provides queued GPU batches, so new prompts and steering settings create another private job. The animations replay captured measurements after the job finishes. Download the experiment ZIP for vectors, activations, configuration, model outputs, scores, and exceptions.
 
-The UI follows the [StyleKit anti-template guide](https://www.stylekit.top/en/avoid-ai-slop): an editorial hierarchy, warm paper background, dark text, forest-green actions, small corner radii, visible focus states, and responsive controls. Animation is used to compare recorded activations.
+Advanced local-GPU, legacy batch, and course-report tools remain available in the collapsed **Advanced tools** section. The UI follows the supplied StyleKit and Impeccable references through progressive disclosure, a clear primary workflow, restrained styling, and semantic emotion colors.

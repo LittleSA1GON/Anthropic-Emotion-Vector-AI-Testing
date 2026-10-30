@@ -1,10 +1,21 @@
 # Model Mountain Emotion Lab
 
-**Control Kaggle from the UI:** open the **Kaggle Experiment Lab** page to enter your Kaggle username and API token, submit private T4 experiments, and inspect real activation measurements in animated 3D plots. Each researcher runs jobs on their own account. See [the API UI guide](docs/KAGGLE_UI.md).
+## Run the lab
+
+Install Python 3.11 or newer, then **double-click `run.bat` on Windows**. On macOS/Linux, run `bash run.sh`.
+
+The launcher creates the project environment, installs the lightweight UI dependencies, and opens [the lab](http://127.0.0.1:8501). Later launches reuse that environment.
+
+1. Paste a Hugging Face model link and choose **Check and add model**.
+2. Upload one CSV containing training and test rows, or download the supplied CSV format.
+3. Enter your Kaggle username and API token, then choose **Run experiment**.
+4. Open **Results & steering** for neutral-subtraction playback, color-coded emotion gauges, generated text, and reusable-vector inference controls.
+
+The example CSV includes twelve training pairs and the original eighteen course cases. Each account runs its own private Kaggle GPU jobs. See [the integrated UI guide](docs/KAGGLE_UI.md).
 
 Run your own experiments to discover, inspect, and steer emotion-related activation vectors. Includes a local Streamlit workbench, a self-contained Kaggle notebook, sequential multi-model inference, native vector checks, signed coefficient sweeps with zero controls, repeated sampling seeds, blinded annotation export, and the CMPE 187 testing/report pipeline.
 
-**Start with [the quickstart](docs/QUICKSTART.md).** Each researcher supplies their own optional Hugging Face token in the app sidebar or Kaggle Secrets. Kaggle API credentials are only needed for local notebook upload/download. Public Qwen weights need no model token. Internal-vector steering uses downloadable model weights; hosted text API keys alone do not provide activation access.
+**Start with [the quickstart](docs/QUICKSTART.md).** Each researcher supplies their own Kaggle credentials in the integrated UI. Gated checkpoints additionally require an attached Kaggle `HF_TOKEN` secret; public Qwen weights need no model token. Internal-vector steering uses downloadable model weights; hosted text API keys alone do not provide activation access.
 
 **Verification:** CPU validation and report artifacts are provided in `evidence/`. Real Kaggle T4 testing completed for Qwen 0.5B FP16, Qwen 1.5B FP32, and SmolLM2 135M FP32: 54 course cases and 18 selected controlled steering generations. FP16 1.5B activation overflow was detected; that failed run is retained. Course thresholds remain unapproved and ungraded. The matched Qwen 0.5B FP16/NF4 experiment and second-family pilot passed. IBM MIA and GTX 1080 Ti execution remain unverified.
 

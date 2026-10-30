@@ -5,6 +5,7 @@ import os
 SOURCE_DIRS = {'mm_emotion', 'scripts', 'tests', 'configs', 'course', 'data',
                'docs', 'integrations', 'work_handoff', 'pages', '.github', '.streamlit', 'examples', 'reference'}
 ROOT_FILES = {'AGENTS.md', 'README.md', '.gitignore', '.gitattributes', '.env.example', 'pytest.ini',
+              'launch.py', 'run.bat', 'run.sh',
               'app_emotion.py', 'SOURCE_SHA256.json', 'START_HERE_FOR_WORK.md',
               'MODEL_MOUNTAIN_EMOTION_AGENT_CONTEXT.txt'}
 

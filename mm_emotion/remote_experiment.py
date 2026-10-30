@@ -10,6 +10,9 @@ import numpy as np
 
 
 def execute(config, output, *, backend_factory=None):
+    if config.get('schema')=='mm-emotion.integrated-request.v2':
+        from .integrated_experiment import execute_integrated
+        return execute_integrated(config,output,backend_factory=backend_factory)
     from .kaggle_runner import validate_request
     from .workbench import make_quick_vector, save_quick_vector
     from .artifacts import runtime_metadata

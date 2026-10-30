@@ -228,6 +228,42 @@
         "accessible focus and contrast",
         "readable animation controls"
       ]
+    },
+    {
+      "id": "T13",
+      "priority": 13,
+      "status": "complete_gpu",
+      "objective": "Integrate model links, all-test CSV, Kaggle account, measured emotion gauges, subtraction animation and mixed-vector inference",
+      "entry": [
+        "mm_emotion/experiment_inputs.py",
+        "mm_emotion/integrated_experiment.py",
+        "mm_emotion/integrated_ui.py",
+        "mm_emotion/experiment_figures.py"
+      ],
+      "acceptance": [
+        "model preflight and real hooks",
+        "downloadable CSV with independent train/test rows",
+        "multi-emotion scores and gauges",
+        "real native-vector reuse and zero controls",
+        "private per-user Kaggle jobs"
+      ]
+    },
+    {
+      "id": "T14",
+      "priority": 14,
+      "status": "complete",
+      "objective": "Provide automatic local setup and easy cross-platform launching",
+      "entry": [
+        "launch.py",
+        "run.bat",
+        "run.sh"
+      ],
+      "acceptance": [
+        "first-run environment setup",
+        "repeat launches reuse existing service",
+        "client requires no local GPU",
+        "no credentials embedded"
+      ]
     }
   ]
 }

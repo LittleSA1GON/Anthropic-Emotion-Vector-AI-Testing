@@ -1,0 +1,22 @@
+{
+  "schema": "mm-emotion.launch-verification.v1",
+  "python": "3.12.14",
+  "platform": "Windows",
+  "commands": [
+    {
+      "command": "python launch.py --check",
+      "result": "passed"
+    },
+    {
+      "command": "run.bat --no-browser",
+      "result": "existing project server reused on port 8501"
+    },
+    {
+      "command": "python launch.py --no-browser --port 8503",
+      "result": "new server started; HTTP health 200; temporary server stopped"
+    }
+  ],
+  "linux_macos_script": "provided, not executed on Windows",
+  "credential_values_in_release": false,
+  "container_setup_required": false
+}

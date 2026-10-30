@@ -1,7 +1,7 @@
 {
   "schema": "mm-emotion.validation.v1",
   "cpu_tests": {
-    "passed": 36,
+    "passed": 40,
     "failed": 0,
     "command": "python -m pytest -q",
     "mocked_or_tensor_tests_not_model_evidence": true
@@ -9,7 +9,8 @@
   "notebook": {
     "schema_valid": true,
     "all_code_cells_compile": true,
-    "reconstructed_source_tests_passed": 32
+    "reconstructed_source_tests_passed": 40,
+    "reconstruction_evidence": "evidence/notebook-tests.xml"
   },
   "streamlit": {
     "home_exceptions": 0,
@@ -139,5 +140,66 @@
     ]
   },
   "style_reference": "https://www.stylekit.top/en/avoid-ai-slop",
-  "ui_pages_verified": 4
+  "ui_pages_verified": 5,
+  "integrated_lab": {
+    "discovery": {
+      "status": "completed",
+      "ref": "littlesa1gon/mm-emotion-20261029-231543-23de31",
+      "source_zip_sha256": "b305508cab1872160fe7ff3b01207fc47e398a48fdcf4c80c6a9316d79d2ab11",
+      "emotions": [
+        "happiness",
+        "sadness",
+        "anger"
+      ],
+      "test_cases": 3,
+      "generations": 9,
+      "native_vectors_reused": [
+        false
+      ],
+      "revision": [
+        "7ae557604adf67be50417f59c2c2f167def9a775"
+      ],
+      "steering_weights": {
+        "happiness": 0.0,
+        "sadness": 0.0,
+        "anger": 0.0
+      },
+      "grading": "Unapproved course thresholds remain ungraded; vector matches are exploratory."
+    },
+    "steering": {
+      "status": "completed",
+      "ref": "littlesa1gon/mm-emotion-20261029-233908-f5b200",
+      "source_zip_sha256": "24c289c5a4c9a4d38b70685038ffbc890bf24b23ec405ee3623587a38eb1657b",
+      "emotions": [
+        "happiness",
+        "sadness",
+        "anger"
+      ],
+      "test_cases": 1,
+      "generations": 2,
+      "native_vectors_reused": [
+        true
+      ],
+      "revision": [
+        "7ae557604adf67be50417f59c2c2f167def9a775"
+      ],
+      "steering_weights": {
+        "happiness": 2.0,
+        "sadness": 0.0,
+        "anger": -1.0
+      },
+      "grading": "Unapproved course thresholds remain ungraded; vector matches are exploratory."
+    }
+  },
+  "launcher": {
+    "windows_batch": "verified ready on http://127.0.0.1:8501",
+    "dependency_setup": "verified",
+    "repeat_launch_reuses_server": true,
+    "requires_local_gpu": false,
+    "fresh_server_start": "verified healthy on port 8503; temporary verification server stopped",
+    "windows_batch_command": "run.bat --no-browser",
+    "macos_linux": "bash run.sh provided; not executed on Windows"
+  },
+  "ui_entrypoints_verified": 5,
+  "containerization": "Cancelled by user; not part of release"
 }

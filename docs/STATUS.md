@@ -1,3 +1,15 @@
+# Integrated lab and easy launch 2026-10-29
+
+- The default app now integrates model links, compatibility checks, a downloadable train/test CSV, per-user Kaggle credentials, measured multi-emotion gauges, neutral-subtraction playback, and native-vector inference controls.
+- Windows: double-click run.bat. macOS/Linux: bash run.sh. First launch creates the environment and installs the lightweight client; later launches reuse it.
+- Real Kaggle verification passed: three emotion vectors, three test prompts, nine discovery/isolation generations, then two baseline/mixed-steering generations reusing the exact vectors and checkpoint revision.
+- 40 CPU tests pass. All five app entrypoints load. Model failures and unapproved thresholds remain explicit; a closest-vector label is not calibrated emotion accuracy.
+- Container work was cancelled by the user and is not included in this release.
+
+Earlier milestones and evidence are retained below.
+
+---
+
 # Kaggle API UI update 2026-10-29
 
 - The local Kaggle Experiment Lab now accepts each user's own Kaggle username and session-only API token, submits private T4 jobs, and downloads their results.

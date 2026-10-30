@@ -1,5 +1,7 @@
 # Run your own Emotion Lab
 
+**Quick launch:** double-click `run.bat` on Windows, or run `bash run.sh` on macOS/Linux. Python 3.11+ is required; the launcher sets up the environment and opens the integrated UI automatically.
+
 For the local UI that runs experiments through **your own Kaggle API**, start with [Kaggle Experiment Lab](KAGGLE_UI.md). It needs no local GPU or downloaded model weights. The notebook workflow below is also available.
 
 Each researcher runs a separate local app or a private Kaggle notebook with their own credentials and output directory. Access to this GitHub repository does not grant Kaggle GPU quota or access to gated model weights.
@@ -13,7 +15,7 @@ Each researcher runs a separate local app or a private Kaggle notebook with thei
 5. In the workbench, load a small model, import matched pairs, scan layers, select the saved native vector, and compare negative / zero / positive strengths on new prompts. Inspect the activation projection and generated text separately.
 6. Save notebook outputs after experiments. The final cell exports the current `runs` directory. Run it again after using panel buttons; earlier ZIPs do not update automatically.
 
-## Local Windows or Linux
+## Advanced local GPU workflow
 
 Use Python 3.12. In a terminal at the repository root:
 
@@ -31,7 +33,7 @@ python -m mm_emotion.cli doctor
 python -m streamlit run app_emotion.py --server.address 127.0.0.1
 ```
 
-Paste your optional Hugging Face token into **Your model access** in the sidebar. It stays in the current Streamlit session. CLI users set `HF_TOKEN` in their own shell. `.env.example` documents variable names but is not automatically loaded. Unload the home-page model before running a multi-model batch to free GPU memory. Use a separate local process for each researcher; this app is not a multi-tenant hosted service.
+Open **Advanced tools → Local vector workbench** for local model loading, prompt pairs, and the optional Hugging Face token field. The token stays in the current Streamlit session. CLI users set `HF_TOKEN` in their own shell. `.env.example` documents variable names but is not automatically loaded. Unload a local model before running another GPU batch to free memory. Use a separate local process for each researcher.
 
 ## Kaggle API credentials
 
@@ -49,7 +51,7 @@ Edit the generated `notebooks/kernel-metadata.json` with your own `username/slug
 kaggle kernels push -p notebooks --no-run
 ```
 
-Alternatively configure your own `KAGGLE_API_TOKEN` or user-home Kaggle credentials according to the [official authentication guide](https://github.com/Kaggle/kaggle-cli/blob/main/docs/README.md). Do not commit personal kernel metadata or credentials. Uploading to Kaggle and spending GPU quota are researcher actions; this release does not upload or run notebooks under someone else's account. [Official kernel commands](https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels.md).
+Alternatively configure your own `KAGGLE_API_TOKEN` or user-home Kaggle credentials according to the [official authentication guide](https://github.com/Kaggle/kaggle-cli/blob/main/docs/README.md). Do not commit personal kernel metadata or credentials. The integrated UI submits private jobs when you click Run experiment, using the account you provide. [Official kernel commands](https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels.md).
 
 ## Reproducible experiments
 
