@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
 import streamlit as st
+from mm_emotion.ui_theme import apply_lab_theme
+apply_lab_theme()
 from mm_emotion.course_tests import starter_cases, validate_cases, write_cases
 from mm_emotion.course_report import make_docx
 ROOT=Path(__file__).resolve().parents[1]

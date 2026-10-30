@@ -171,7 +171,9 @@ def _results():
         columns=st.columns(min(3,len(labels)-offset))
         for col,label in zip(columns,labels[offset:offset+3]):
             import html
-            col.markdown(f'<span style="color:{colors[label]};font-weight:600">{html.escape(label)}</span>',unsafe_allow_html=True)
+            col.markdown(f'<span style="display:inline-flex;align-items:center;gap:.5rem;font-weight:600">'
+                         f'<span aria-hidden="true" style="width:.6rem;height:.6rem;border-radius:50%;background:{colors[label]}"></span>'
+                         f'{html.escape(label)}</span>',unsafe_allow_html=True)
             previous=float(result['configuration'].get('steering_weights',{}).get(label,0))
             weights[label]=col.slider('Steer '+label,-10.,10.,previous,.25,key=prefix+'_weight_'+label)
     prompt=st.text_area('Inference prompt',case['prompt'],key=prefix+'_infer_prompt')
@@ -201,7 +203,8 @@ def main():
     if 'next_lab_view' in st.session_state:st.session_state['lab_view']=st.session_state.pop('next_lab_view')
     st.title('Emotion lab')
     st.caption('Model link, test CSV, and your Kaggle account. Learn emotion directions, inspect neutral subtraction, and steer inference.')
-    view=st.radio('Workspace',['Setup','Results & steering'],horizontal=True,label_visibility='collapsed',key='lab_view')
+    with st.container(key='lab_workspace'):
+        view=st.radio('Workspace',['Setup','Results & steering'],horizontal=True,label_visibility='collapsed',key='lab_view')
     if view=='Setup':_setup()
     else:_results()
     with st.expander('Advanced tools'):

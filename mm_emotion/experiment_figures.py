@@ -3,18 +3,44 @@ import html
 from pathlib import Path
 import numpy as np
 from .experiment_inputs import emotion_colors
+from .ui_theme import ACCENT,INK,INK_SOFT,PANEL,RULE,plot_font
+
+# Playback: each stage holds long enough to read its title; scatter3d cannot tween,
+# so stage changes cut cleanly instead of faking interpolation.
+STAGE_HOLD_MS=1300
+
+
+def player_controls(frame_names,prefix='Stage',hold=STAGE_HOLD_MS,x=.27):
+    """Shared Play / Pause / Restart buttons and a stage scrubber in the lab palette."""
+    play={'frame':{'duration':hold,'redraw':True},'transition':{'duration':0},'fromcurrent':True,'mode':'immediate'}
+    restart={'frame':{'duration':hold,'redraw':True},'transition':{'duration':0},'mode':'immediate'}
+    pause={'frame':{'duration':0,'redraw':False},'transition':{'duration':0},'mode':'immediate'}
+    menu=dict(type='buttons',direction='left',x=0,y=-.08,xanchor='left',yanchor='top',showactive=False,
+        bgcolor='#ffffff',bordercolor=RULE,borderwidth=1,font=plot_font(12),pad=dict(t=0,r=6),
+        buttons=[dict(label='Play',method='animate',args=[None,play]),
+                 dict(label='Pause',method='animate',args=[[None],pause]),
+                 dict(label='Restart',method='animate',args=[list(frame_names),restart])])
+    slider=dict(x=x,len=.97-x,y=-.08,yanchor='top',pad=dict(t=8,b=0),
+        bgcolor=PANEL,activebgcolor=ACCENT,bordercolor=RULE,borderwidth=1,tickcolor=RULE,ticklen=4,
+        font=plot_font(10),currentvalue=dict(prefix=prefix+': ',font=plot_font(12),xanchor='left'),
+        transition=dict(duration=0),
+        steps=[dict(label=name,method='animate',args=[[name],{'mode':'immediate','frame':{'duration':0,'redraw':True},
+            'transition':{'duration':0}}]) for name in frame_names])
+    return [menu],[slider]
 
 
 def emotion_gauge(label,value,color):
     import plotly.graph_objects as go
-    fig=go.Figure(go.Indicator(mode='gauge+number' if value is not None else 'gauge',value=float(value or 0),
-        title={'text':html.escape(label),'font':{'size':17,'color':color}},
-        number={'valueformat':'.2f','font':{'size':25,'color':'#192b36'},'suffix':'' if value is not None else ' · N/A'},
-        gauge={'axis':{'range':[-1,1],'tickvals':[-1,0,1],'tickfont':{'size':10}},
+    fig=go.Figure(go.Indicator(mode='gauge+number' if value is not None else 'gauge',value=round(float(value or 0),2)+0.,
+        title={'text':html.escape(label),'font':{'size':15,'color':INK}},
+        number={'valueformat':'+.2f','font':{'size':26,'color':INK},'suffix':'' if value is not None else ' · N/A'},
+        gauge={'axis':{'range':[-1,1],'tickvals':[-1,0,1],'tickfont':{'size':10,'color':INK_SOFT},'tickcolor':RULE},
                'bar':{'color':color,'thickness':.25},'bgcolor':'#eef1f4','borderwidth':0,
                'threshold':{'value':0,'line':{'color':'#b5bec4','width':1}}}))
-    fig.update_layout(height=180,margin=dict(l=22,r=22,t=40,b=5),paper_bgcolor='rgba(0,0,0,0)',font=dict(family='Arial'))
-    if value is None:fig.add_annotation(text='Unscorable',x=.5,y=.12,showarrow=False,font=dict(size=14))
+    # The needle sweeps in from zero so a new readout is visibly a new measurement.
+    fig.update_layout(height=180,margin=dict(l=22,r=22,t=40,b=5),paper_bgcolor='rgba(0,0,0,0)',font=plot_font(),
+        transition=dict(duration=650,easing='cubic-out'))
+    if value is None:fig.add_annotation(text='Unscorable',x=.5,y=.12,showarrow=False,font=plot_font(13))
     return fig
 
 
@@ -56,7 +82,9 @@ def experiment_animation(result,result_path,alias,case_id):
             ('Subtract','Subtract neutral: Δh = h(input) − h(neutral)',2),('Match','Closest vector: '+best,3)]
     generations=[r for r in result['results'] if r['model_alias']==alias and r.get('case_id')==case_id]
     stages += [('Steer '+str(i+1),r['condition'],4+i) for i,r in enumerate(generations)]
+    total=len(stages)
     for frame_name,title,stage in stages:
+        title=f'<span style="color:{INK_SOFT}">{stage+1} / {total}</span>   {html.escape(title)}'
         traces=list(context)
         traces.append(scatter([[0,0,0]],'Neutral reference','#263b47',6,visible=stage>=1))
         traces.append(scatter([raw],'Input relative to neutral','#164e69',7))
@@ -67,22 +95,22 @@ def experiment_animation(result,result_path,alias,case_id):
         if stage>=4:
             row=generations[stage-4];value=project(row['observed_prefill_activation']);all_points.append(value)
         traces.append(scatter([value if value is not None else raw],'Measured generation state','#121b21',8,visible=stage>=4))
-        frames.append(go.Frame(name=frame_name,data=traces,layout=go.Layout(title=dict(text=title,font=dict(size=14)))))
+        frames.append(go.Frame(name=frame_name,data=traces,layout=go.Layout(title=dict(text=title,font=plot_font(15),x=0,xanchor='left',y=.985,yref='container'))))
     ranges=[];all_points=np.asarray(all_points)
     for dimension in range(3):
         low=float(all_points[:,dimension].min());high=float(all_points[:,dimension].max());pad=max((high-low)*.12,.2)
         ranges.append([low-pad,high+pad])
     figure=go.Figure(data=frames[0].data,frames=frames)
-    figure.update_layout(title=dict(text='Input activation',font=dict(size=14)),height=590,
-        margin=dict(l=0,r=0,t=50,b=95),paper_bgcolor='rgba(0,0,0,0)',font=dict(color='#192b36'),
-        scene=dict(bgcolor='rgba(0,0,0,0)',xaxis=dict(title='PC1',range=ranges[0]),
-                   yaxis=dict(title='PC2',range=ranges[1]),zaxis=dict(title='PC3',range=ranges[2])),
-        legend=dict(orientation='h',font=dict(size=10),y=1.1,yanchor='bottom'),
-        updatemenus=[dict(type='buttons',x=0,y=-.1,showactive=False,buttons=[
-            dict(label='Play',method='animate',args=[None,{'frame':{'duration':900,'redraw':True},'fromcurrent':True}]),
-            dict(label='Pause',method='animate',args=[[None],{'frame':{'duration':0,'redraw':False},'mode':'immediate'}])])],
-        sliders=[dict(x=.25,len=.75,y=-.1,currentvalue=dict(prefix='Stage: '),
-            steps=[dict(label=f.name,method='animate',args=[[f.name],{'mode':'immediate','frame':{'duration':0,'redraw':True}}]) for f in frames])])
+    menus,sliders=player_controls([f.name for f in frames])
+    axis=lambda title,span:dict(title=dict(text=title,font=plot_font(11)),range=span,gridcolor=RULE,zerolinecolor='#b7c1c6',
+                                showbackground=False,tickfont=plot_font(9))
+    figure.update_layout(title=dict(text=frames[0].layout.title.text,font=plot_font(15),x=0,xanchor='left',y=.985,yref='container'),
+        height=620,margin=dict(l=0,r=0,t=92,b=96),paper_bgcolor='rgba(0,0,0,0)',font=plot_font(),
+        scene=dict(bgcolor='rgba(0,0,0,0)',xaxis=axis('PC1',ranges[0]),yaxis=axis('PC2',ranges[1]),zaxis=axis('PC3',ranges[2]),
+                   camera=dict(eye=dict(x=1.45,y=1.45,z=.95))),
+        legend=dict(orientation='h',font=plot_font(10),y=1.0,yanchor='bottom',x=0,itemclick='toggleothers'),
+        hoverlabel=dict(bgcolor='#ffffff',bordercolor=RULE,font=plot_font(12)),
+        updatemenus=menus,sliders=sliders,uirevision=f'{alias}:{case_id}')
     return figure
 
 
@@ -95,5 +123,7 @@ def subtraction_chart(result,result_path,alias,case_id):
         figure.add_bar(name=label,x=[str(i) for i in indices],y=values[indices],marker_color=color)
     figure.update_layout(height=280,barmode='group',margin=dict(l=20,r=0,t=20,b=30),
         xaxis_title='Hidden dimensions with the largest neutral-subtracted change',yaxis_title='Activation units',
-        paper_bgcolor='rgba(0,0,0,0)',legend=dict(orientation='h',y=1.15))
+        paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',font=plot_font(),bargap=.25,
+        xaxis=dict(gridcolor=RULE,tickfont=plot_font(10)),yaxis=dict(gridcolor=RULE,zerolinecolor='#9aa7ae',tickfont=plot_font(10)),
+        hoverlabel=dict(bgcolor='#ffffff',bordercolor=RULE,font=plot_font(12)),legend=dict(orientation='h',y=1.15,font=plot_font(11)))
     return figure

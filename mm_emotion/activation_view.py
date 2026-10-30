@@ -54,21 +54,31 @@ def activation_animation(points,observations,variance):
     fig=px.scatter_3d(pd.DataFrame(frames),x='x',y='y',z='z',color='group',
         animation_frame='coefficient',hover_data=['label','coefficient'],
         category_orders={'coefficient':sorted({p['coefficient'] for p in observations})},
-        color_discrete_map={'Neutral training':'#94a3b8','Emotion training':'#2563eb',
-                            'Neutral reference':'#f59e0b','Measured test activation':'#e11d48'})
+        color_discrete_map={'Neutral training':'#b7c1c6','Emotion training':'#164e69',
+                            'Neutral reference':'#a8661c','Measured test activation':'#b4233c'})
+    from .ui_theme import RULE,plot_font
+    fig.update_traces(marker=dict(line=dict(width=0)))
     arrays=np.array([[r[c] for c in ('x','y','z')] for r in points+observations])
     ranges=[]
     for dim in range(3):
         lo=float(arrays[:,dim].min());hi=float(arrays[:,dim].max());pad=max((hi-lo)*.15,.25)
         ranges.append([lo-pad,hi+pad])
-    fig.update_layout(height=650,margin=dict(l=0,r=0,t=85,b=100),
-        paper_bgcolor='#f6f4ed',font=dict(color='#202820',family='Segoe UI, Arial, sans-serif'),
-        scene=dict(xaxis=dict(title=f'PC1 ({variance[0]:.0%})',range=ranges[0]),
-                   yaxis=dict(title=f'PC2 ({variance[1]:.0%})',range=ranges[1]),
-                   zaxis=dict(title=f'PC3 ({variance[2]:.0%})',range=ranges[2]),bgcolor='#f6f4ed'),
+    axis=lambda title,span:dict(title=dict(text=title,font=plot_font(11)),range=span,gridcolor=RULE,
+                                zerolinecolor='#b7c1c6',showbackground=False,tickfont=plot_font(9))
+    fig.update_layout(height=650,margin=dict(l=0,r=0,t=85,b=100),uirevision='activation-view',
+        paper_bgcolor='rgba(0,0,0,0)',font=plot_font(),hoverlabel=dict(bgcolor='#ffffff',bordercolor=RULE,font=plot_font(12)),
+        scene=dict(xaxis=axis(f'PC1 ({variance[0]:.0%})',ranges[0]),yaxis=axis(f'PC2 ({variance[1]:.0%})',ranges[1]),
+                   zaxis=axis(f'PC3 ({variance[2]:.0%})',ranges[2]),bgcolor='rgba(0,0,0,0)'),
         legend=dict(title_text='',orientation='h',x=0,y=1.1,yanchor='bottom',
-                    entrywidth=.5,entrywidthmode='fraction',font=dict(size=10)))
+                    entrywidth=.5,entrywidthmode='fraction',font=plot_font(10)))
+    # Strength steps hold long enough to compare positions; 3D scatter cannot tween.
+    from .experiment_figures import STAGE_HOLD_MS
+    from .ui_theme import ACCENT,PANEL
     for slider in fig.layout.sliders:
-        slider.update(y=-.12,x=.18,len=.8,pad=dict(t=20),currentvalue=dict(prefix='Strength: ',font=dict(size=11)))
-    for menu in fig.layout.updatemenus:menu.update(y=-.12,x=0,yanchor='top',pad=dict(t=20))
+        slider.update(y=-.12,x=.18,len=.8,pad=dict(t=20),bgcolor=PANEL,activebgcolor=ACCENT,bordercolor=RULE,
+                      tickcolor=RULE,font=plot_font(10),currentvalue=dict(prefix='Strength: ',font=plot_font(12)))
+    for menu in fig.layout.updatemenus:
+        menu.update(y=-.12,x=0,yanchor='top',pad=dict(t=20),bgcolor='#ffffff',bordercolor=RULE,font=plot_font(12))
+        menu.buttons[0].args[1]['frame']['duration']=STAGE_HOLD_MS
+        menu.buttons[0].args[1]['transition']['duration']=0
     return fig

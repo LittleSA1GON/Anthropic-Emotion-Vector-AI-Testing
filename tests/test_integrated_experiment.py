@@ -26,11 +26,26 @@ def test_model_links_and_preflight_use_official_hub():
     urls=[]
     def get(url,**kwargs):
         urls.append(url)
-        data={'sha':'abc123','safetensors':{'total':500_000_000}} if '/api/models/' in url else {'model_type':'qwen2','num_hidden_layers':24}
+        data={'sha':'a'*40,'safetensors':{'total':500_000_000}} if '/api/models/' in url else {'model_type':'qwen2','num_hidden_layers':24}
         return SimpleNamespace(status_code=200,raise_for_status=lambda:None,json=lambda:data)
     model=probe_model('Qwen/Qwen2.5-0.5B-Instruct',get=get)
-    assert model['revision']=='abc123' and model['layers']==24 and model['preflight']=='candidate'
+    assert model['revision']=='a'*40 and model['layers']==24 and model['preflight']=='candidate'
     assert all(u.startswith('https://huggingface.co/') for u in urls)
+
+
+def test_branch_preflight_pins_metadata_and_config_to_same_commit():
+    urls=[]
+    def get(url,**kwargs):
+        urls.append(url)
+        data={'sha':'b'*40} if '/api/models/' in url else {'model_type':'qwen2','num_hidden_layers':24}
+        return SimpleNamespace(status_code=200,raise_for_status=lambda:None,json=lambda:data)
+    model=probe_model('https://huggingface.co/test/model/tree/release',get=get)
+    assert urls==['https://huggingface.co/api/models/test/model/revision/release',
+                  'https://huggingface.co/test/model/resolve/'+'b'*40+'/config.json']
+    assert model['revision']=='b'*40
+    def missing_sha(url,**kwargs):
+        return SimpleNamespace(status_code=200,raise_for_status=lambda:None,json=lambda:{})
+    with pytest.raises(ValueError,match='immutable'):probe_model('test/model',get=missing_sha)
 
 
 def test_csv_template_preserves_original_18_classifications():
@@ -43,6 +58,16 @@ def test_csv_template_preserves_original_18_classifications():
     bad=config();bad['csv_rows'][-1]['prompt']=bad['csv_rows'][0]['prompt']
     with pytest.raises(ValueError,match='separate'):validate_integrated_request(bad)
     with pytest.raises(ValueError):validate_integrated_request({**config(),'api_key':'secret'})
+
+
+def test_duplicate_pairs_and_formatting_leakage_are_rejected():
+    bad=config()
+    for key in ['prompt','neutral_prompt']:bad['csv_rows'][1][key]=bad['csv_rows'][0][key].replace(' ','  ')
+    with pytest.raises(ValueError,match='distinct'):validate_integrated_request(bad)
+    bad=config();bad['csv_rows'][-1]['prompt']=bad['csv_rows'][0]['prompt'].replace(' ','  ')
+    with pytest.raises(ValueError,match='separate'):validate_integrated_request(bad)
+    bad=config();bad.update(inference_prompt=bad['csv_rows'][0]['prompt'].replace(' ','\t'),inference_neutral='A separate neutral reference')
+    with pytest.raises(ValueError,match='separate'):validate_integrated_request(bad)
 
 
 class MultiBackend:

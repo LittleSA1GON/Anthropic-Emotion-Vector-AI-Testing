@@ -1,3 +1,13 @@
+# Implementation review 2026-10-29
+
+- Fixed duplicate-pair counting and whitespace-based train/test/inference leakage in the integrated CSV contract.
+- Branch/tag preflight now resolves and pins an immutable checkpoint SHA before reading the model configuration.
+- Preserved the pending UI refinements and verified their figures against archived real captures.
+- 42 CPU tests pass both locally and from notebook-restored source; all five UI entrypoints load.
+- No Claude-specific attribution or metadata was found in the audited source, embedded notebook, document XML, or existing commit messages. See `docs/IMPLEMENTATION_REVIEW.md`.
+
+---
+
 # Integrated lab and easy launch 2026-10-29
 
 - The default app now integrates model links, compatibility checks, a downloadable train/test CSV, per-user Kaggle credentials, measured multi-emotion gauges, neutral-subtraction playback, and native-vector inference controls.

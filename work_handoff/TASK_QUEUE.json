@@ -264,6 +264,23 @@
         "client requires no local GPU",
         "no credentials embedded"
       ]
+    },
+    {
+      "id": "T15",
+      "priority": 15,
+      "status": "complete",
+      "objective": "Review current implementation and Claude metadata, fix confirmed validation defects, and push reviewed UI refinements",
+      "entry": [
+        "docs/IMPLEMENTATION_REVIEW.md",
+        "mm_emotion/experiment_inputs.py"
+      ],
+      "acceptance": [
+        "metadata audit recorded",
+        "distinct training pairs and leakage guarded",
+        "branch/tag preflight pins immutable revision",
+        "focused and full CPU tests pass",
+        "notebook source verified"
+      ]
     }
   ]
 }

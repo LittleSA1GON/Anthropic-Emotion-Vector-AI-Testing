@@ -1,7 +1,7 @@
 {
   "schema": "mm-emotion.validation.v1",
   "cpu_tests": {
-    "passed": 40,
+    "passed": 42,
     "failed": 0,
     "command": "python -m pytest -q",
     "mocked_or_tensor_tests_not_model_evidence": true
@@ -9,7 +9,7 @@
   "notebook": {
     "schema_valid": true,
     "all_code_cells_compile": true,
-    "reconstructed_source_tests_passed": 40,
+    "reconstructed_source_tests_passed": 42,
     "reconstruction_evidence": "evidence/notebook-tests.xml"
   },
   "streamlit": {
@@ -201,5 +201,14 @@
     "macos_linux": "bash run.sh provided; not executed on Windows"
   },
   "ui_entrypoints_verified": 5,
-  "containerization": "Cancelled by user; not part of release"
+  "containerization": "Cancelled by user; not part of release",
+  "implementation_review": {
+    "report": "docs/IMPLEMENTATION_REVIEW.md",
+    "evidence": "evidence/implementation-review.json",
+    "fixed": [
+      "duplicate training pair count and whitespace leakage",
+      "mutable model preflight revisions"
+    ],
+    "preserved": "existing UI refinements"
+  }
 }

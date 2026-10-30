@@ -1,0 +1,36 @@
+{
+  "schema": "mm-emotion.implementation-review.v1",
+  "date": "2026-10-29",
+  "metadata_audit": {
+    "claude_metadata_found": false,
+    "tracked_files_scanned": 261,
+    "embedded_files_scanned": 115,
+    "document_xml_parts_scanned": 39,
+    "existing_commit_messages_scanned": 4,
+    "history_rewritten": false
+  },
+  "fixed": [
+    "distinct pair minimum and whitespace leakage",
+    "immutable branch/tag model revision"
+  ],
+  "tests": {
+    "focused_passed": 10,
+    "full_passed": 42,
+    "notebook_restored_passed": 42,
+    "ui_entrypoints_passed": 5
+  },
+  "figure_frames": {
+    "discovery": 11,
+    "steering": 6,
+    "legacy": 3
+  },
+  "live_model_preflight": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "requested_revision": "main",
+    "resolved_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "layers": 24
+  },
+  "new_gpu_inference": false,
+  "existing_measurements_modified": false,
+  "local_patch_backup": "ui-refresh.patch retained locally; applied source changes included"
+}

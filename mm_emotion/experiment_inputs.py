@@ -44,11 +44,15 @@ def probe_model(value,*,get=None):
         import requests
         get=requests.get
     model_id,revision=parse_model_link(value)
-    response=get('https://huggingface.co/api/models/'+model_id,timeout=25)
+    metadata_url='https://huggingface.co/api/models/'+model_id
+    if revision:metadata_url+='/revision/'+revision
+    response=get(metadata_url,timeout=25)
     if response.status_code in (401,403):raise ValueError('Model metadata requires access. Start with a public checkpoint or configure model access.')
     response.raise_for_status();info=response.json()
-    revision=revision or info.get('sha')
-    config_response=get('https://huggingface.co/'+model_id+'/resolve/'+(revision or 'main')+'/config.json',timeout=25)
+    revision=info.get('sha')
+    if not isinstance(revision,str) or not re.fullmatch(r'[a-fA-F0-9]{40}',revision):
+        raise ValueError('The Hub did not return an immutable checkpoint revision. No GPU job was started.')
+    config_response=get('https://huggingface.co/'+model_id+'/resolve/'+revision+'/config.json',timeout=25)
     config_response.raise_for_status();config=config_response.json()
     text=config.get('text_config',config)
     kind=text.get('model_type',config.get('model_type'))
@@ -76,6 +80,11 @@ def csv_template():
     return stream.getvalue().encode('utf8')
 
 
+def _prompt_key(prompt):
+    # Compare formatting variants without rewriting the user's recorded input.
+    return ' '.join(prompt.split())
+
+
 def parse_experiment_csv(content):
     if isinstance(content,bytes):content=content.decode('utf-8-sig')
     if len(content)>2_000_000:raise ValueError('Use a CSV smaller than 2 MB')
@@ -90,7 +99,7 @@ def parse_experiment_csv(content):
         if clean['row_type'] not in {'train','test'}:raise ValueError(f'Line {i}: row_type must be train or test')
         if not clean['case_id'] or not clean['prompt'] or not clean['neutral_prompt']:raise ValueError(f'Line {i}: case_id, prompt and neutral_prompt are required')
         if len(clean['prompt'])>12000 or len(clean['neutral_prompt'])>12000:raise ValueError(f'Line {i}: prompt exceeds 12,000 characters')
-        if clean['row_type']=='train' and (not re.fullmatch(r'[\w -]{1,40}',clean['emotion']) or clean['prompt']==clean['neutral_prompt']):
+        if clean['row_type']=='train' and (not re.fullmatch(r'[\w -]{1,40}',clean['emotion']) or _prompt_key(clean['prompt'])==_prompt_key(clean['neutral_prompt'])):
             raise ValueError(f'Line {i}: training rows need an emotion label and distinct emotional/neutral prompts')
         rows.append(clean)
         if len(rows)>200:raise ValueError('Use at most 200 CSV rows per job')
@@ -98,10 +107,11 @@ def parse_experiment_csv(content):
     train=[r for r in rows if r['row_type']=='train'];tests=[r for r in rows if r['row_type']=='test']
     labels=list(dict.fromkeys(r['emotion'] for r in train))
     if not 1<=len(labels)<=6:raise ValueError('Provide one to six emotion labels in training rows')
-    if any(sum(r['emotion']==label for r in train)<2 for label in labels):raise ValueError('Each emotion needs at least two training pairs')
+    if any(len({(_prompt_key(r['prompt']),_prompt_key(r['neutral_prompt'])) for r in train if r['emotion']==label})<2 for label in labels):
+        raise ValueError('Each emotion needs at least two distinct training pairs')
     if not 1<=len(tests)<=50:raise ValueError('Provide one to fifty test rows')
-    training_text={r[k] for r in train for k in ('prompt','neutral_prompt')}
-    if training_text.intersection(r[k] for r in tests for k in ('prompt','neutral_prompt')):
+    training_text={_prompt_key(r[k]) for r in train for k in ('prompt','neutral_prompt')}
+    if training_text.intersection(_prompt_key(r[k]) for r in tests for k in ('prompt','neutral_prompt')):
         raise ValueError('Training and test prompts must be separate; do not evaluate vectors on their own training prompts')
     return {'rows':rows,'training':train,'tests':tests,'emotions':labels}
 
@@ -134,8 +144,8 @@ def validate_integrated_request(request):
     if sum(abs(v) for v in weights.values())>30:raise ValueError('Combined absolute steering strength must not exceed 30')
     prompt=request.get('inference_prompt','').strip();neutral=request.get('inference_neutral','').strip()
     if prompt and (not neutral or len(prompt)>12000 or len(neutral)>12000):raise ValueError('Inference needs a prompt and neutral reference, each under 12,000 characters')
-    train={r[k] for r in dataset['training'] for k in ('prompt','neutral_prompt')}
-    if prompt and train.intersection([prompt,neutral]):raise ValueError('Inference prompts must be separate from training')
+    train={_prompt_key(r[k]) for r in dataset['training'] for k in ('prompt','neutral_prompt')}
+    if prompt and train.intersection([_prompt_key(prompt),_prompt_key(neutral)]):raise ValueError('Inference prompts must be separate from training')
     reuse=request.get('reuse_vectors',{})
     if set(reuse)-{m['alias'] for m in models}:raise ValueError('Unknown native vector attachment')
     for alias,entry in reuse.items():

@@ -30,6 +30,8 @@ for folder in (VECTORS, SESSIONS, CUSTOM_DATA):
     folder.mkdir(parents=True, exist_ok=True)
 
 st.set_page_config(page_title="Model Mountain | Vector Workbench", page_icon="🔬", layout="wide")
+from mm_emotion.ui_theme import apply_lab_theme
+apply_lab_theme()
 from mm_emotion.credentials import credential_panel
 hf_token = credential_panel()
 st.title("Model Mountain · Emotion Vector Workbench")
